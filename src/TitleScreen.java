@@ -3,9 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CritterQuestTitleScreen {
+public class TitleScreen {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new CritterQuestTitleScreen().createAndShowGUI());
+        SwingUtilities.invokeLater(() -> new TitleScreen().createAndShowGUI());
     }
 
     private void createAndShowGUI() {
