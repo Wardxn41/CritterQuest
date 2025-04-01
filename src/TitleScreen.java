@@ -3,6 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+//miles note 4/1 : this is the temp version so we should convert it to the idea shown through the window manager class
+
+
 public class TitleScreen {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new TitleScreen().createAndShowGUI());
