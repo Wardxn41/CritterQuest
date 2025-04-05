@@ -8,8 +8,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-//miles note 4/1 : this is the temp version so we should convert it to the idea shown through the window manager class
-
 
 public class TitleScreen extends WindowPanel implements ScreenInterface {
 
@@ -50,15 +48,18 @@ public class TitleScreen extends WindowPanel implements ScreenInterface {
         button3.setBounds(300, 400, 200, 40);
         button4.setBounds(300, 450, 200, 40);
 
-        button1.addActionListener(e -> manager.setIndex(0));
-        button2.addActionListener(e -> manager.setIndex(1));
-        button3.addActionListener(e -> manager.setIndex(2));
+        button1.addActionListener(e -> manager.setIndex(1));
+        button2.addActionListener(e -> manager.setIndex(2));
+        button3.addActionListener(e -> manager.setIndex(3));
         button4.addActionListener(e -> System.exit(0));
 
         add(button1);
         add(button2);
         add(button3);
         add(button4);
+
+        revalidate();
+        repaint();
     }
 
     @Override

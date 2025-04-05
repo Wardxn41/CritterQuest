@@ -17,15 +17,15 @@ public class FileScreen extends WindowPanel implements ScreenInterface {
         clearPanel();
         frame.setSize(600,600);
 
-        button1 = new JButton("Go to Screen 2");
-        button2 = new JButton("Go to Screen 3");
-        button3 = new JButton("Go to Screen 4");
-        button4 = new JButton("Exit");
+        button1 = new JButton("Back");
+        button2 = new JButton("Save 1 none of these are implented yet, they are just buttons");
+        button3 = new JButton("Save 2");
+        button4 = new JButton("Save 3");
 
         button1.addActionListener(e -> manager.setIndex(0));
-        button2.addActionListener(e -> manager.setIndex(1));
-        button3.addActionListener(e -> manager.setIndex(2));
-        button4.addActionListener(e -> System.exit(0));
+        button2.addActionListener(e -> manager.setIndex(4));
+        button3.addActionListener(e -> manager.setIndex(4));
+        button4.addActionListener(e -> manager.setIndex(4));
 
         add(label);
         add(button1);
@@ -33,6 +33,9 @@ public class FileScreen extends WindowPanel implements ScreenInterface {
         add(button3);
         add(button4);
 
+        button1.setAlignmentX(10);
+        button1.setAlignmentY(10);
+        button1.setBackground(Color.red);
 
         revalidate();
         repaint();
