@@ -14,9 +14,11 @@ public class TitleScreen extends WindowPanel implements ScreenInterface {
     private JButton button1, button2, button3, button4;
     private JLabel label = new JLabel("You are in title screen");
     private BufferedImage backgroundImage;
+    private BufferedImage titleImage;
     public TitleScreen() {
         try {
             backgroundImage = ImageIO.read(new File("images/TitleBackground.png"));
+            titleImage = ImageIO.read(new File("images/TitleScreenTitle.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -25,8 +27,18 @@ public class TitleScreen extends WindowPanel implements ScreenInterface {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
         if (backgroundImage != null) {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+        if (titleImage != null) {
+            int scaledWidth = titleImage.getWidth() / 2;   // adjust scale here
+            int scaledHeight = titleImage.getHeight() / 2;
+
+            int x = (getWidth() - scaledWidth) / 2; // center horizontally
+            int y = 120; // vertical offset
+
+            g2d.drawImage(titleImage, x, y, scaledWidth, scaledHeight, this);
         }
     }
 
