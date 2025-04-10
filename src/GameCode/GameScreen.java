@@ -7,24 +7,31 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
 
     private JButton button1;
     private JLabel label = new JLabel("This is where the main gameplay loop is where you got a creature and such");
-
-    public GameScreen() {}
+    private CritterStatsPanel statsPanel;
+    private CritterInfo critter;
+    public GameScreen() {
+        //this.critter = critter;
+       // this.statsPanel = new CritterStatsPanel(critter);
+       // this.label = new JLabel("this is the main gameplay loop");
+    }
 
     @Override
     public void calculateVisuals() {
         clearPanel();
-        frame.setSize(900,900);
+        setLayout(new BorderLayout());
 
-        button1 = new JButton("Back to pregame screen");
+        this.critter = GameData.activeCritter;
+        this.statsPanel = new CritterStatsPanel(critter);
 
-        button1.addActionListener(e -> manager.setIndex(4));
+        JButton backButton = new JButton("Back to pregame screen");
+        backButton.addActionListener(e -> manager.setIndex(4));
+        backButton.setBackground(Color.RED);
 
-        add(label);
-        add(button1);
+        JPanel topPanel = new JPanel(new FlowLayout());
+        topPanel.add(backButton);
 
-        button1.setAlignmentX(10);
-        button1.setAlignmentY(10);
-        button1.setBackground(Color.red);
+        add(topPanel, BorderLayout.NORTH);
+        add(statsPanel, BorderLayout.EAST);
 
         revalidate();
         repaint();

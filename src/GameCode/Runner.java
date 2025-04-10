@@ -1,12 +1,13 @@
 package GameCode;
 
 import java.util.List;
-
+import GameCode.CritterInfo;
+import GameCode.CritterFactory;
 public class Runner {
 
     public static void main(String[] args) {
 
-
+        //CritterInfo critter = CritterFactory.createTurtle("Shelly");
         //creates an instance of windowManager and fills it with the screens it manages
         WindowManager windowManager = new WindowManager(List.of(
 

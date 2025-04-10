@@ -17,9 +17,13 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
 
         button1 = new JButton("Back to file select");
         button2 = new JButton("Go to main game play screen");
-
+        button2.addActionListener(e -> {
+            CritterInfo selectedCritter = CritterFactory.createTurtle("Shelly");
+            GameData.activeCritter = selectedCritter;
+            manager.setIndex(5);
+                });
         button1.addActionListener(e -> manager.setIndex(1));
-        button2.addActionListener(e -> manager.setIndex(5));
+        //button2.addActionListener(e -> manager.setIndex(5));
 
         add(label);
         add(button1);
