@@ -1,13 +1,3 @@
-//Critter Drain Breakdown:
-//Hunger: Start -> -2 hunger/4sec
-//         =<75 -> -5 hunger/8sec
-//         =<50 -> -7 hunger/10sec
-//         =<25 -> -10 hunger/20sec
-
-//Thirst: Start -> -1 thirst/4sec
-//         =<75 -> -4 thirst/8sec
-//         =<50 -> -6 thirst/10sec
-//         =<25 -> -8 thirst/15sec
 
 package GameCode;
 public class CritterInfo {

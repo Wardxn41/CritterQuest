@@ -1,7 +1,7 @@
 package GameCode;
 
 public class CritterFactory {
-
+//Turtle
     public static CritterInfo createTurtle(String name) {
         CritterTemplate turtleTemplate = new CritterTemplate(
                 "Turtle", 150,
@@ -12,11 +12,11 @@ public class CritterFactory {
         );
         return new CritterInfo(name, turtleTemplate);
     }
-
+// Whale
     public static CritterInfo createWhale(String name) {
         CritterTemplate whaleTemplate = new CritterTemplate(
-                "Whale", 80,
-                3, 2,              // faster hunger/thirst decay
+                "Whale", 120,
+                5, 4,              // faster hunger/thirst decay
                 70, 40, 15,
                 5, 7, 10,
                 10, 12, 20
@@ -24,7 +24,7 @@ public class CritterFactory {
         return new CritterInfo(name, whaleTemplate);
     }
 
-    // You can add more:
+    // Mushroom Man
     public static CritterInfo createMushroom_Man(String name) {
         CritterTemplate mushroomTemplate = new CritterTemplate(
                 "Mushroom Man", 100,
@@ -35,7 +35,7 @@ public class CritterFactory {
         );
         return new CritterInfo(name, mushroomTemplate);
     }
-
+//Bear
     public static CritterInfo createBear(String name) {
         CritterTemplate bearTemplate = new CritterTemplate(
                 "Turtle", 150,
@@ -46,7 +46,7 @@ public class CritterFactory {
         );
         return new CritterInfo(name, bearTemplate);
     }
-
+//WOLF
     public static CritterInfo createWolf(String name) {
         CritterTemplate wolfTemplate = new CritterTemplate(
                 "Turtle", 150,
