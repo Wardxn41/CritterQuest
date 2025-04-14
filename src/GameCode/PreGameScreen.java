@@ -32,7 +32,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         Font uiFont = new Font("SansSerif", Font.BOLD, 16);
         Font largeFont = new Font("SansSerif", Font.BOLD, 24);
 
-        // 🔹 Back Button Panel (Top-Left)
+        // Back Button Panel
         button1 = new JButton("⮌");
         button1.setFont(uiFont);
         button1.setPreferredSize(new Dimension(60, 60));
@@ -43,7 +43,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         topLeftPanel.setOpaque(false);
         add(topLeftPanel, BorderLayout.NORTH);
 
-        // 🔹 Name Input
+        // Name Input
         nameField = new JTextField(15);
         nameField.setFont(uiFont);
 
@@ -52,33 +52,54 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         namePanel.add(nameField);
         namePanel.setOpaque(false);
 
-        // 🔹 Creature Selector Panel
+        // Creature Selector Panel
         String[] speciesOptions = {"Turtle", "Bear", "Whale", "Wolf", "Mushroom Man"};
         creatureSelectorPanel = new JPanel();
         creatureSelectorPanel.setLayout(new BoxLayout(creatureSelectorPanel, BoxLayout.X_AXIS));
         creatureSelectorPanel.setOpaque(false);
 
+        ButtonGroup speciesGroup = new ButtonGroup(); // Optional if you want exclusive selection
+
         for (String species : speciesOptions) {
-            JButton speciesButton = new JButton(species);
-            speciesButton.setFont(largeFont);
-            speciesButton.setPreferredSize(new Dimension(200, 80));
+            ImageIcon icon = null;
+            try {
+                // Load image (scale it)
+                Image img = new ImageIcon("images/creatures/temp.jpg").getImage();//+ species.replace(" ", "_") + ".png").getImage();
+                Image scaledImg = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                icon = new ImageIcon(scaledImg);
+            } catch (Exception ex) {
+                System.err.println("Could not load image for " + species);
+            }
+
+            JToggleButton speciesButton = new JToggleButton(icon);
+            speciesButton.setToolTipText(species); // Hover label
+            speciesButton.setPreferredSize(new Dimension(110, 110));
+            speciesButton.setFocusPainted(false);
+            speciesButton.setBackground(Color.LIGHT_GRAY);
+
+            if (species.equals("Turtle")) {
+                speciesButton.setSelected(true); // Default selection
+            }
+
             speciesButton.addActionListener(e -> {
                 selectedSpecies = species;
                 System.out.println("Selected species: " + selectedSpecies);
             });
-            creatureSelectorPanel.add(Box.createHorizontalStrut(15));
+
+            speciesGroup.add(speciesButton);
+            creatureSelectorPanel.add(Box.createHorizontalStrut(10));
             creatureSelectorPanel.add(speciesButton);
         }
 
         JScrollPane scrollPane = new JScrollPane(creatureSelectorPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(700, 120));
+        scrollPane.setPreferredSize(new Dimension(700, 140));
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Select Species"));
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Select Your Critter"));
 
-        // 🔹 Play Button
+        // Play Button
         button2 = new JButton("Play!");
         button2.setFont(uiFont);
         button2.addActionListener(e -> {
