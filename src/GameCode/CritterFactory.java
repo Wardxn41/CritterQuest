@@ -8,7 +8,7 @@ public class CritterFactory {
                 6, 6,              // slower hunger/thirst decay
                 70, 40, 15,        // thresholds
                 3, 5, 8,           // damage
-                15, 20, 40         // time thresholds
+                15, 20, 40, "images/background/tempBackground.png"         // time thresholds
         );
         return new CritterInfo(name, turtleTemplate);
     }
@@ -19,7 +19,7 @@ public class CritterFactory {
                 5, 4,              // faster hunger/thirst decay
                 70, 40, 15,
                 5, 7, 10,
-                10, 12, 20
+                10, 12, 20, "images/background/temp.jpg"
         );
         return new CritterInfo(name, whaleTemplate);
     }
@@ -31,7 +31,7 @@ public class CritterFactory {
                 2, 9999,           // no thirst loss
                 70, 40, 15,
                 6, 9, 12,
-                8, 10, 15
+                8, 10, 15, "images/background/temp.jpg"
         );
         return new CritterInfo(name, mushroomTemplate);
     }
@@ -42,7 +42,7 @@ public class CritterFactory {
                 6, 6,              // slower hunger/thirst decay
                 70, 40, 15,        // thresholds
                 3, 5, 8,           // damage
-                15, 20, 40         // time thresholds
+                15, 20, 40, "images/background/temp.jpg"         // time thresholds
         );
         return new CritterInfo(name, bearTemplate);
     }
@@ -53,7 +53,7 @@ public class CritterFactory {
                 6, 6,              // slower hunger/thirst decay
                 70, 40, 15,        // thresholds
                 3, 5, 8,           // damage
-                15, 20, 40         // time thresholds
+                15, 20, 40, "images/background/temp.jpg"         // time thresholds
         );
         return new CritterInfo(name, wolfTemplate);
     }

@@ -13,6 +13,8 @@ public class CreatureSelectorButton extends JToggleButton {
     private final Color selectedColor = new Color(173, 216, 230); // Light blue
     private final JLabel iconLabel;
     private final JLabel nameLabel;
+    private boolean isLocked = false;
+    private Image padlockIcon;
 
     public CreatureSelectorButton(String speciesName, int width, int height, ActionListener onSelect) {
         super();
@@ -39,6 +41,12 @@ public class CreatureSelectorButton extends JToggleButton {
         }
         iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
+        try {
+            padlockIcon = new ImageIcon("images/icons/lock.png").getImage()
+                    .getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        } catch (Exception ex) {
+            System.err.println("Padlock image missing!");
+        }
         // Name label
         nameLabel = new JLabel(speciesName);
         nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -49,7 +57,7 @@ public class CreatureSelectorButton extends JToggleButton {
         setToolTipText(speciesName);
         addActionListener(onSelect);
 
-        // 🔹 Custom selection effect
+        // Custom selection effect
         getModel().addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -69,12 +77,21 @@ public class CreatureSelectorButton extends JToggleButton {
     }
 
     public void setLocked(boolean locked) {
+        isLocked = locked;
         setEnabled(!locked);
         setBackground(locked ? Color.DARK_GRAY : Color.LIGHT_GRAY);
-        if (locked) {
-            setToolTipText("Locked — master the previous critter!");
-        } else {
-            setToolTipText(speciesName);
+        setToolTipText(locked ? "Locked — master the previous critter!" : speciesName);
+        repaint(); // Repaint to trigger lock drawing
+    }
+
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (isLocked && padlockIcon != null) {
+            int padX = getWidth() - 40;
+            int padY = 10;
+            g.drawImage(padlockIcon, padX, padY, this);
         }
     }
+
 }

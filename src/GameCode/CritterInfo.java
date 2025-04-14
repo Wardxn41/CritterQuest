@@ -5,7 +5,6 @@ public class CritterInfo {
     private int health, hunger, thirst, age;
     private boolean isAlive;
     private long lastUpdatedTime;
-
     private CritterTemplate template;
 
     // Decay timers
@@ -86,6 +85,9 @@ public class CritterInfo {
     public boolean isAlive() { return isAlive; }
     public String getName() { return name; }
     public String getSpecies() { return template.speciesName; }
+
 }
+
+
 
 

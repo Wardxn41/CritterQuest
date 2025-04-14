@@ -31,37 +31,27 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
     @Override
     public void calculateVisuals() {
         clearPanel();
-        frame.setSize(900, 900);
+        frame.setSize(900, 700);
         setLayout(new BorderLayout());
 
         Font uiFont = new Font("SansSerif", Font.BOLD, 16);
         Font largeFont = new Font("SansSerif", Font.BOLD, 24);
 
-        // Back Button
-        button1 = new JButton("⮌");
-        button1.setFont(uiFont);
-        button1.setPreferredSize(new Dimension(60, 60));
-        button1.addActionListener(e -> manager.setIndex(1));
-
-        JPanel topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        topLeftPanel.add(button1);
-        topLeftPanel.setOpaque(false);
-        add(topLeftPanel, BorderLayout.NORTH);
-
-        // Name input
-        nameField = new JTextField(15);
+        // Name Input (Top)
+        nameField = new JTextField(20);
         nameField.setFont(uiFont);
 
-        JPanel namePanel = new JPanel();
+        JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         namePanel.add(new JLabel("Name:"));
         namePanel.add(nameField);
         namePanel.setOpaque(false);
+        add(namePanel, BorderLayout.NORTH);
 
-        // Card-based Creature Selector
+        // Creature Card Carousel (Center)
         cardLayout = new CardLayout();
         cardHolderPanel = new JPanel(cardLayout);
         cardHolderPanel.setOpaque(false);
-        cardHolderPanel.setPreferredSize(new Dimension(220, 180));
+        cardHolderPanel.setPreferredSize(new Dimension(320, 480)); // size of center creature
 
         for (int i = 0; i < speciesOptions.length; i++) {
             String species = speciesOptions[i];
@@ -82,30 +72,54 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
             cardHolderPanel.add(wrapper, species);
         }
 
-        // Navigation Buttons
-        JButton leftButton = new JButton("←");
-        leftButton.setFont(largeFont);
-        leftButton.addActionListener(e -> {
+// Left/Right Carousel Controls
+        JButton leftArrow = new JButton("←");
+        leftArrow.setFont(new Font("SansSerif", Font.BOLD, 20));
+        leftArrow.setPreferredSize(new Dimension(60, 60));
+        leftArrow.addActionListener(e -> {
             currentIndex = (currentIndex - 1 + speciesOptions.length) % speciesOptions.length;
             cardLayout.show(cardHolderPanel, speciesOptions[currentIndex]);
         });
 
-        JButton rightButton = new JButton("→");
-        rightButton.setFont(largeFont);
-        rightButton.addActionListener(e -> {
+        JButton rightArrow = new JButton("→");
+        rightArrow.setFont(new Font("SansSerif", Font.BOLD, 20));
+        rightArrow.setPreferredSize(new Dimension(60, 60));
+        rightArrow.addActionListener(e -> {
             currentIndex = (currentIndex + 1) % speciesOptions.length;
             cardLayout.show(cardHolderPanel, speciesOptions[currentIndex]);
         });
 
-        JPanel navPanel = new JPanel(new BorderLayout());
-        navPanel.setOpaque(false);
-        navPanel.add(leftButton, BorderLayout.WEST);
-        navPanel.add(cardHolderPanel, BorderLayout.CENTER);
-        navPanel.add(rightButton, BorderLayout.EAST);
+// Center layout with GridBagLayout for proper vertical centering
+        JPanel centerCarouselPanel = new JPanel(new GridBagLayout());
+        centerCarouselPanel.setOpaque(false);
 
-        // Play Button
-        button2 = new JButton("Play!");
+        GridBagConstraints cc = new GridBagConstraints();
+        cc.insets = new Insets(10, 10, 10, 10);
+        cc.gridy = 0;
+        cc.fill = GridBagConstraints.NONE;
+
+        cc.gridx = 0;
+        centerCarouselPanel.add(leftArrow, cc);
+
+        cc.gridx = 1;
+        centerCarouselPanel.add(cardHolderPanel, cc);
+
+        cc.gridx = 2;
+        centerCarouselPanel.add(rightArrow, cc);
+
+// Add to the main screen center
+        add(centerCarouselPanel, BorderLayout.CENTER);
+
+
+        // Bottom Buttons Panel: Back | Play | Shop
+        JButton backButton = new JButton("⮌");
+        backButton.setFont(uiFont);
+        backButton.setPreferredSize(new Dimension(80, 40));
+        backButton.addActionListener(e -> manager.setIndex(1));
+
+        button2 = new JButton("Play");
         button2.setFont(uiFont);
+        button2.setPreferredSize(new Dimension(120, 40));
         button2.addActionListener(e -> {
             String name = nameField.getText().trim();
             if (name.isEmpty()) name = "Critter";
@@ -124,22 +138,21 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
             manager.setIndex(5);
         });
 
-        // Center Layout
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setOpaque(false);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        centerPanel.add(navPanel, gbc);
+        JButton shopButton = new JButton("Shop");
+        shopButton.setFont(uiFont);
+        shopButton.setPreferredSize(new Dimension(80, 40));
+        shopButton.addActionListener(e -> {
+            System.out.println("Shop button clicked (not implemented yet)");
+        });
 
-        gbc.gridy++;
-        centerPanel.add(namePanel, gbc);
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 10));
+        bottomPanel.setPreferredSize(new Dimension(900, 70)); // Fix visibility
+        bottomPanel.setOpaque(false);
+        bottomPanel.add(backButton);
+        bottomPanel.add(button2);
+        bottomPanel.add(shopButton);
 
-        gbc.gridy++;
-        centerPanel.add(button2, gbc);
-
-        add(centerPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         revalidate();
         repaint();

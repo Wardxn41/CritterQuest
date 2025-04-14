@@ -9,7 +9,12 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     private JLabel label = new JLabel("This is where the main gameplay loop is where you got a creature and such");
     private CritterStatsPanel statsPanel;
     private CritterInfo critter;
+    private Image backgroundImage;
+
+
     public GameScreen() {
+
+
         //this.critter = critter;
        // this.statsPanel = new CritterStatsPanel(critter);
        // this.label = new JLabel("this is the main gameplay loop");
@@ -33,9 +38,12 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
         add(topPanel, BorderLayout.NORTH);
         add(statsPanel, BorderLayout.EAST);
 
+        CritterInfo critter = GameData.activeCritter;
+
         revalidate();
         repaint();
     }
+
 
     @Override
     public void clearPanel() {
