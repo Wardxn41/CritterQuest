@@ -7,21 +7,26 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
 
     private JButton button1, button2;
     private JLabel label = new JLabel("This is where the player is between rounds, also is where the shop is");
-    //private JComboBox<String> speciesDropdown;
     private JTextField nameField;
     private Image backgroundImage;
 
     private String selectedSpecies = "Turtle";
-    private JPanel creatureSelectorPanel;
+    private int currentIndex = 0;
+
+    private final String[] speciesOptions = {"Turtle", "Bear", "Whale", "Wolf", "Mushroom Man"};
+    private final boolean[] unlocked = {true, false, false, false, false};
+
+    private CardLayout cardLayout;
+    private JPanel cardHolderPanel;
+
     public PreGameScreen() {
         try {
-            backgroundImage = new ImageIcon("images/PreGameBackground.png").getImage(); // Adjust path if needed
+            backgroundImage = new ImageIcon("images/PreGameBackground.png").getImage();
         } catch (Exception e) {
             System.err.println("Could not load background image");
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void calculateVisuals() {
@@ -32,7 +37,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         Font uiFont = new Font("SansSerif", Font.BOLD, 16);
         Font largeFont = new Font("SansSerif", Font.BOLD, 24);
 
-        // Back Button Panel
+        // Back Button
         button1 = new JButton("⮌");
         button1.setFont(uiFont);
         button1.setPreferredSize(new Dimension(60, 60));
@@ -43,7 +48,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         topLeftPanel.setOpaque(false);
         add(topLeftPanel, BorderLayout.NORTH);
 
-        // Name Input
+        // Name input
         nameField = new JTextField(15);
         nameField.setFont(uiFont);
 
@@ -52,52 +57,51 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         namePanel.add(nameField);
         namePanel.setOpaque(false);
 
-        // Creature Selector Panel
-        String[] speciesOptions = {"Turtle", "Bear", "Whale", "Wolf", "Mushroom Man"};
-        creatureSelectorPanel = new JPanel();
-        creatureSelectorPanel.setLayout(new BoxLayout(creatureSelectorPanel, BoxLayout.X_AXIS));
-        creatureSelectorPanel.setOpaque(false);
+        // Card-based Creature Selector
+        cardLayout = new CardLayout();
+        cardHolderPanel = new JPanel(cardLayout);
+        cardHolderPanel.setOpaque(false);
+        cardHolderPanel.setPreferredSize(new Dimension(220, 180));
 
-        ButtonGroup speciesGroup = new ButtonGroup(); // Optional if you want exclusive selection
+        for (int i = 0; i < speciesOptions.length; i++) {
+            String species = speciesOptions[i];
+            boolean isUnlocked = unlocked[i];
 
-        for (String species : speciesOptions) {
-            ImageIcon icon = null;
-            try {
-                // Load image (scale it)
-                Image img = new ImageIcon("images/creatures/temp.jpg").getImage();//+ species.replace(" ", "_") + ".png").getImage();
-                Image scaledImg = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-                icon = new ImageIcon(scaledImg);
-            } catch (Exception ex) {
-                System.err.println("Could not load image for " + species);
-            }
-
-            JToggleButton speciesButton = new JToggleButton(icon);
-            speciesButton.setToolTipText(species); // Hover label
-            speciesButton.setPreferredSize(new Dimension(110, 110));
-            speciesButton.setFocusPainted(false);
-            speciesButton.setBackground(Color.LIGHT_GRAY);
-
-            if (species.equals("Turtle")) {
-                speciesButton.setSelected(true); // Default selection
-            }
-
-            speciesButton.addActionListener(e -> {
-                selectedSpecies = species;
-                System.out.println("Selected species: " + selectedSpecies);
+            CreatureSelectorButton btn = new CreatureSelectorButton(species, 100, 100, e -> {
+                if (isUnlocked) {
+                    selectedSpecies = ((CreatureSelectorButton) e.getSource()).getSpeciesName();
+                    System.out.println("Selected species: " + selectedSpecies);
+                }
             });
 
-            speciesGroup.add(speciesButton);
-            creatureSelectorPanel.add(Box.createHorizontalStrut(10));
-            creatureSelectorPanel.add(speciesButton);
+            btn.setLocked(!isUnlocked);
+
+            JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            wrapper.setOpaque(false);
+            wrapper.add(btn);
+            cardHolderPanel.add(wrapper, species);
         }
 
-        JScrollPane scrollPane = new JScrollPane(creatureSelectorPanel);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(700, 140));
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Select Your Critter"));
+        // Navigation Buttons
+        JButton leftButton = new JButton("←");
+        leftButton.setFont(largeFont);
+        leftButton.addActionListener(e -> {
+            currentIndex = (currentIndex - 1 + speciesOptions.length) % speciesOptions.length;
+            cardLayout.show(cardHolderPanel, speciesOptions[currentIndex]);
+        });
+
+        JButton rightButton = new JButton("→");
+        rightButton.setFont(largeFont);
+        rightButton.addActionListener(e -> {
+            currentIndex = (currentIndex + 1) % speciesOptions.length;
+            cardLayout.show(cardHolderPanel, speciesOptions[currentIndex]);
+        });
+
+        JPanel navPanel = new JPanel(new BorderLayout());
+        navPanel.setOpaque(false);
+        navPanel.add(leftButton, BorderLayout.WEST);
+        navPanel.add(cardHolderPanel, BorderLayout.CENTER);
+        navPanel.add(rightButton, BorderLayout.EAST);
 
         // Play Button
         button2 = new JButton("Play!");
@@ -120,14 +124,14 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
             manager.setIndex(5);
         });
 
-        // 🔹 Center Layout with GridBag to center vertically and horizontally
+        // Center Layout
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(10, 10, 10, 10);
-        centerPanel.add(scrollPane, gbc);
+        centerPanel.add(navPanel, gbc);
 
         gbc.gridy++;
         centerPanel.add(namePanel, gbc);
@@ -140,7 +144,6 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         revalidate();
         repaint();
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -157,3 +160,4 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         repaint();
     }
 }
+
