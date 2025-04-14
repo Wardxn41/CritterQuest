@@ -7,10 +7,12 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
 
     private JButton button1, button2;
     private JLabel label = new JLabel("This is where the player is between rounds, also is where the shop is");
-    private JComboBox<String> speciesDropdown;
+    //private JComboBox<String> speciesDropdown;
     private JTextField nameField;
     private Image backgroundImage;
 
+    private String selectedSpecies = "Turtle";
+    private JPanel creatureSelectorPanel;
     public PreGameScreen() {
         try {
             backgroundImage = new ImageIcon("images/PreGameBackground.png").getImage(); // Adjust path if needed
@@ -20,94 +22,104 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         }
     }
 
+
     @Override
     public void calculateVisuals() {
         clearPanel();
         frame.setSize(900, 900);
+        setLayout(new BorderLayout());
 
         Font uiFont = new Font("SansSerif", Font.BOLD, 16);
+        Font largeFont = new Font("SansSerif", Font.BOLD, 24);
 
-        // Buttons
-        button1 = new JButton("Back to file select");
+        // 🔹 Back Button Panel (Top-Left)
+        button1 = new JButton("⮌");
         button1.setFont(uiFont);
-        button2 = new JButton("Go to main game play screen");
-        button2.setFont(uiFont);
+        button1.setPreferredSize(new Dimension(60, 60));
+        button1.addActionListener(e -> manager.setIndex(1));
 
-        // Species and name input
-        speciesDropdown = new JComboBox<>(new String[]{
-                "Turtle", "Bear", "Whale", "Wolf", "Mushroom Man"
-        });
-        speciesDropdown.setFont(uiFont);
+        JPanel topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topLeftPanel.add(button1);
+        topLeftPanel.setOpaque(false);
+        add(topLeftPanel, BorderLayout.NORTH);
 
+        // 🔹 Name Input
         nameField = new JTextField(15);
         nameField.setFont(uiFont);
 
-        // Button listener
+        JPanel namePanel = new JPanel();
+        namePanel.add(new JLabel("Name:"));
+        namePanel.add(nameField);
+        namePanel.setOpaque(false);
+
+        // 🔹 Creature Selector Panel
+        String[] speciesOptions = {"Turtle", "Bear", "Whale", "Wolf", "Mushroom Man"};
+        creatureSelectorPanel = new JPanel();
+        creatureSelectorPanel.setLayout(new BoxLayout(creatureSelectorPanel, BoxLayout.X_AXIS));
+        creatureSelectorPanel.setOpaque(false);
+
+        for (String species : speciesOptions) {
+            JButton speciesButton = new JButton(species);
+            speciesButton.setFont(largeFont);
+            speciesButton.setPreferredSize(new Dimension(200, 80));
+            speciesButton.addActionListener(e -> {
+                selectedSpecies = species;
+                System.out.println("Selected species: " + selectedSpecies);
+            });
+            creatureSelectorPanel.add(Box.createHorizontalStrut(15));
+            creatureSelectorPanel.add(speciesButton);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(creatureSelectorPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.setPreferredSize(new Dimension(700, 120));
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Select Species"));
+
+        // 🔹 Play Button
+        button2 = new JButton("Play!");
+        button2.setFont(uiFont);
         button2.addActionListener(e -> {
-            String selectedSpecies = (String) speciesDropdown.getSelectedItem();
             String name = nameField.getText().trim();
             if (name.isEmpty()) name = "Critter";
 
             CritterInfo newCritter;
             switch (selectedSpecies) {
-                case "Whale":
-                    newCritter = CritterFactory.createWhale(name);
-                    break;
-                case "Mushroom Man":
-                    newCritter = CritterFactory.createMushroom_Man(name);
-                    break;
-                case "Bear":
-                    newCritter = CritterFactory.createBear(name);
-                    break;
-                case "Turtle":
-                    newCritter = CritterFactory.createTurtle(name);
-                    break;
-                case "Wolf":
-                    newCritter = CritterFactory.createWolf(name);
-                    break;
-                default:
-                    return;
+                case "Whale": newCritter = CritterFactory.createWhale(name); break;
+                case "Mushroom Man": newCritter = CritterFactory.createMushroom_Man(name); break;
+                case "Bear": newCritter = CritterFactory.createBear(name); break;
+                case "Turtle": newCritter = CritterFactory.createTurtle(name); break;
+                case "Wolf": newCritter = CritterFactory.createWolf(name); break;
+                default: return;
             }
 
             GameData.activeCritter = newCritter;
-            manager.setIndex(5); // Go to GameScreen
+            manager.setIndex(5);
         });
 
-        button1.addActionListener(e -> manager.setIndex(1));
+        // 🔹 Center Layout with GridBag to center vertically and horizontally
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        centerPanel.add(scrollPane, gbc);
 
-        // Sub-panels
-        JPanel speciesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        speciesPanel.add(new JLabel("Species:"));
-        speciesPanel.add(speciesDropdown);
-        speciesPanel.setOpaque(false);
+        gbc.gridy++;
+        centerPanel.add(namePanel, gbc);
 
-        JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        namePanel.add(new JLabel("Name:"));
-        namePanel.add(nameField);
-        namePanel.setOpaque(false);
+        gbc.gridy++;
+        centerPanel.add(button2, gbc);
 
-        JPanel critterSetupPanel = new JPanel(new GridLayout(0, 1, 10, 10));
-        critterSetupPanel.setBorder(BorderFactory.createTitledBorder("Create Your Critter"));
-        critterSetupPanel.add(speciesPanel);
-        critterSetupPanel.add(namePanel);
-        critterSetupPanel.add(button2);
-        critterSetupPanel.setOpaque(false);
-
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        bottomPanel.add(button1);
-        bottomPanel.setOpaque(false);
-
-        label.setFont(uiFont);
-        label.setForeground(Color.WHITE);
-        label.setOpaque(false);
-
-        add(label, BorderLayout.NORTH);
-        add(critterSetupPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
+        add(centerPanel, BorderLayout.CENTER);
 
         revalidate();
         repaint();
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {
