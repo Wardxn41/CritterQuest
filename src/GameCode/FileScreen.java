@@ -44,19 +44,19 @@ public class FileScreen extends WindowPanel implements ScreenInterface {
         button2 = new JButton("💾 Save Slot 1 (not implemented)");
         styleButton(button2, bigFont, new Color(70, 130, 180), Color.WHITE, Color.WHITE);
         addHoverEffect(button2, new Color(65, 105, 145));
-        button2.addActionListener(e -> manager.setIndex(4));
+        button2.addActionListener(e -> manager.loadSaveSlot(4,0));
 
         // Button 3 - Save Slot 2
         button3 = new JButton("🗃 Save Slot 2");
         styleButton(button3, bigFont, new Color(60, 179, 113), Color.BLACK, Color.BLACK);
         addHoverEffect(button3, new Color(46, 139, 87));
-        button3.addActionListener(e -> manager.setIndex(4));
+        button3.addActionListener(e -> manager.loadSaveSlot(4,1));
 
         // Button 4 - Save Slot 3
         button4 = new JButton("📂 Save Slot 3");
         styleButton(button4, bigFont, new Color(138, 43, 226), Color.WHITE, Color.WHITE);
         addHoverEffect(button4, new Color(123, 31, 200));
-        button4.addActionListener(e -> manager.setIndex(4));
+        button4.addActionListener(e -> manager.loadSaveSlot(4,2));
 
         // Button Panel - vertical layout and spacing
         JPanel buttonPanel = new JPanel();
