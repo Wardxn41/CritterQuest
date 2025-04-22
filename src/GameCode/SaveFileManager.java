@@ -48,7 +48,7 @@ public class SaveFileManager {
             CritterTemplate dummyTemplate = new CritterTemplate(
                     "Species", 100, 60, 60,
                     70, 50, 30, 5, 10, 20,
-                    10, 5, 2, "assets/bg.png"
+                    10, 5, 2, "assets/bg.png", "assets/bg.png"
             );
 
             player.fromSaveString(sb.toString(), dummyTemplate);

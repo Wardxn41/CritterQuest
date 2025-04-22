@@ -10,11 +10,11 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
     private JTextField nameField;
     private Image backgroundImage;
 
-    private String selectedSpecies = "Turtle";
+    private String selectedSpecies;
     private int currentIndex = 0;
 
     private final String[] speciesOptions = {"Turtle", "Bear", "Whale", "Wolf", "Mushroom Man"};
-    private final boolean[] unlocked = {true, false, false, false, false};
+    private final boolean[] unlocked = {true, true, true, true, true};
 
     private CardLayout cardLayout;
     private JPanel cardHolderPanel;

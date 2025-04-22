@@ -14,7 +14,6 @@ public class CritterInfo {
     public CritterInfo(String name, CritterTemplate template) {
         this.name = name;
         this.template = template;
-
         this.health = template.maxHealth;
         this.hunger = 100;
         this.thirst = 100;
@@ -24,6 +23,10 @@ public class CritterInfo {
 
     public CritterInfo() {
         this.template = new CritterTemplate();
+    }
+
+    public CritterTemplate getTemplate() {
+        return template;
     }
 
     public void tickUpdate(long currentTime) {

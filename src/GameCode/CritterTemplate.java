@@ -18,14 +18,14 @@ public class CritterTemplate {
     public int warningTimer;
     public int dangerTimer;
     public int criticalTimer;
-
+    private String characterPath;
     private String backgroundPath;
     // Constructor
     public CritterTemplate(String speciesName, int maxHealth,
                            int hungerDecayRate, int thirstDecayRate,
                            int warningThreshold, int dangerThreshold, int criticalThreshold,
                            int warningDamage, int dangerDamage, int criticalDamage,
-                           int warningTimer, int dangerTimer, int criticalTimer, String backgroundPath) {
+                           int warningTimer, int dangerTimer, int criticalTimer, String backgroundPath, String characterPath) {
 
         this.speciesName = speciesName;
         this.maxHealth = maxHealth;
@@ -46,6 +46,7 @@ public class CritterTemplate {
         this.criticalTimer = criticalTimer;
 
         this.backgroundPath = backgroundPath;
+        this.characterPath = characterPath;
     }
 
     public CritterTemplate() {
@@ -74,7 +75,7 @@ public class CritterTemplate {
     public String getBackgroundPath() {
         return backgroundPath;
     }
-
+    public String getCharacterPath(){ return characterPath; }
 }
 
 
