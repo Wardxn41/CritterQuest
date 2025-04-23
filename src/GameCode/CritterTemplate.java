@@ -48,6 +48,29 @@ public class CritterTemplate {
         this.backgroundPath = backgroundPath;
     }
 
+    public CritterTemplate() {
+        this.speciesName = "";
+        this.maxHealth = 0;
+
+        this.hungerDecayRate = 0;
+        this.thirstDecayRate = 0;
+
+        this.warningThreshold = 0;
+        this.dangerThreshold = 0;
+        this.criticalThreshold = 0;
+
+        this.warningDamage = 0;
+        this.dangerDamage = 0;
+        this.criticalDamage = 0;
+
+        this.warningTimer = 0;
+        this.dangerTimer = 0;
+        this.criticalTimer = 0;
+
+        this.backgroundPath = "";
+    }
+
+
     public String getBackgroundPath() {
         return backgroundPath;
     }

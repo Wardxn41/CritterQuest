@@ -1,62 +1,71 @@
 package GameCode;
 
 public class CritterFactory {
-//Turtle
+
+    // Turtle in crystals during the day
     public static CritterInfo createTurtle(String name) {
         CritterTemplate turtleTemplate = new CritterTemplate(
                 "Turtle", 150,
-                6, 6,              // slower hunger/thirst decay
-                70, 40, 15,        // thresholds
-                3, 5, 8,           // damage
-                15, 20, 40, "images/background/tempBackground.png"         // time thresholds
+                6, 6,
+                70, 40, 15,
+                3, 5, 8,
+                15, 20, 40,
+                "images/background/CrystalsDay.png"
         );
         return new CritterInfo(name, turtleTemplate);
     }
-// Whale
+
+    // Whale in pond during the day
     public static CritterInfo createWhale(String name) {
         CritterTemplate whaleTemplate = new CritterTemplate(
                 "Whale", 120,
-                5, 4,              // faster hunger/thirst decay
+                5, 4,
                 70, 40, 15,
                 5, 7, 10,
-                10, 12, 20, "images/background/temp.jpg"
+                10, 12, 20,
+                "images/background/PondDay.png"
         );
         return new CritterInfo(name, whaleTemplate);
     }
 
-    // Mushroom Man
+    // Mushroom Man on trail during the day
     public static CritterInfo createMushroom_Man(String name) {
         CritterTemplate mushroomTemplate = new CritterTemplate(
-                "Mushroom Man", 100,
-                2, 9999,           // no thirst loss
+                "MushroomMan", 100,
+                2, 9999,
                 70, 40, 15,
                 6, 9, 12,
-                8, 10, 15, "images/background/temp.jpg"
+                8, 10, 15,
+                "images/background/TrailDay.png"
         );
         return new CritterInfo(name, mushroomTemplate);
     }
-//Bear
+
+    // Bear with antlers in forest during the day
     public static CritterInfo createBear(String name) {
         CritterTemplate bearTemplate = new CritterTemplate(
-                "Turtle", 150,
-                6, 6,              // slower hunger/thirst decay
-                70, 40, 15,        // thresholds
-                3, 5, 8,           // damage
-                15, 20, 40, "images/background/temp.jpg"         // time thresholds
+                "Bear", 150,
+                6, 6,
+                70, 40, 15,
+                3, 5, 8,
+                15, 20, 40,
+                "images/background/ForestDay.png"
         );
         return new CritterInfo(name, bearTemplate);
     }
-//WOLF
+
+    // Cool Wolf in woods at night
     public static CritterInfo createWolf(String name) {
         CritterTemplate wolfTemplate = new CritterTemplate(
-                "Turtle", 150,
-                6, 6,              // slower hunger/thirst decay
-                70, 40, 15,        // thresholds
-                3, 5, 8,           // damage
-                15, 20, 40, "images/background/temp.jpg"         // time thresholds
+                "Wolf", 150,
+                6, 6,
+                70, 40, 15,
+                3, 5, 8,
+                15, 20, 40,
+                "images/background/WoodsNight.png"
         );
         return new CritterInfo(name, wolfTemplate);
     }
-}
 
+}
 

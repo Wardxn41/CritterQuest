@@ -22,6 +22,10 @@ public class CritterInfo {
         this.lastUpdatedTime = System.currentTimeMillis();
     }
 
+    public CritterInfo() {
+        this.template = new CritterTemplate();
+    }
+
     public void tickUpdate(long currentTime) {
         long elapsed = currentTime - lastUpdatedTime;
         int seconds = (int) (elapsed / 1000);
