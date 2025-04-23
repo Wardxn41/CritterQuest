@@ -17,7 +17,7 @@ public class CritterStatsPanel extends JPanel{
 
     public CritterStatsPanel(CritterInfo critter) {
         this.critter = critter;
-        setLayout(new GridLayout(0,1));
+        setLayout(new GridLayout(0,5));
         setBorder(BorderFactory.createTitledBorder("Critter Stats"));
 
         nameLabel = new JLabel();
@@ -44,6 +44,15 @@ public class CritterStatsPanel extends JPanel{
             }
         }, 0, 1000);
     }
+
+    private JLabel makeStyledLabel() {
+        JLabel label = new JLabel();
+        label.setFont(new Font("Verdana", Font.BOLD, 14));
+        label.setForeground(Color.WHITE);
+        label.setOpaque(false);
+        return label;
+    }
+
     private void upadateLabels(){
         nameLabel.setText("Name: " +critter.getName());
         healthLabel.setText("Health: " +critter.getHealth());

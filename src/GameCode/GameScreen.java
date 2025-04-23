@@ -21,7 +21,6 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     public void calculateVisuals() {
         clearPanel();
         setLayout(new BorderLayout());
-
         this.critter = GameData.activeCritter;
         this.statsPanel = new CritterStatsPanel(critter);
 
@@ -41,18 +40,20 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
             System.err.println("Could not load critter character image.");
             e.printStackTrace();
         }
+
+
         JButton backButton = new JButton("Back to pregame screen");
         backButton.addActionListener(e -> manager.setIndex(4));
         backButton.setBackground(Color.RED);
 
         JPanel topPanel = new JPanel(new FlowLayout());
-        topPanel.add(backButton);
 
+        topPanel.add(backButton);
         add(topPanel, BorderLayout.NORTH);
-        add(statsPanel, BorderLayout.EAST);
+        add(statsPanel, BorderLayout.SOUTH);
+
 
         CritterInfo critter = GameData.activeCritter;
-
         revalidate();
         repaint();
     }
