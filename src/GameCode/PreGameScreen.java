@@ -142,10 +142,10 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
             }
         });
 
-        JButton shopButton = new JButton("Shop");
+        JButton shopButton = new JButton("Shop - "+manager.getPlayerInfo().getCritterBucks()+"$");
         shopButton.setFont(uiFont);
-        shopButton.setPreferredSize(new Dimension(80, 40));
-        shopButton.addActionListener(e -> System.out.println("Shop button clicked (not implemented yet)"));
+        shopButton.setPreferredSize(new Dimension(160, 40));
+        shopButton.addActionListener(e -> manager.setIndex(7));
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 10));
         bottomPanel.setPreferredSize(new Dimension(900, 70));

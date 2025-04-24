@@ -17,7 +17,7 @@ public class CreditsScreen extends WindowPanel implements ScreenInterface {
         frame.setSize(900,900);
 
         button = new JButton("Back");
-        button.addActionListener(e -> manager.setIndex(0));
+        button.addActionListener(e -> manager.setIndex(4));
 
         add(button);
         button.setAlignmentX(10);

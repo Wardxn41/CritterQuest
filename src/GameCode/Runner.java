@@ -10,9 +10,10 @@ public class Runner {
 
                 new TitleScreen(), new FileScreen(), new OptionsScreen(),
                 //id = 0           //id = 1          //id = 2
-                new CreditsScreen(), new PreGameScreen(), new GameScreen(), new CritterSelectScreen()
+                new CreditsScreen(), new PreGameScreen(), new GameScreen(), new CritterSelectScreen(),
                 //id = 3           //id = 4          //id = 5               //id = 6?
-
+                new ShopScreen()
+                //id = 7           //id =           //id =
         ));
     }
 

@@ -43,7 +43,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
 
 
         JButton backButton = new JButton("Back to pregame screen");
-        backButton.addActionListener(e -> manager.setIndex(4));
+        backButton.addActionListener(e -> calculateRewards());
         backButton.setBackground(Color.RED);
 
         JPanel topPanel = new JPanel(new FlowLayout());
@@ -56,6 +56,16 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
         CritterInfo critter = GameData.activeCritter;
         revalidate();
         repaint();
+    }
+
+    //basically just the you are quiting your creature and getting your critter bucks for it
+    private void calculateRewards() {
+
+        PlayerInfo info = manager.getPlayerInfo();
+        //info.setCritterBucks(info.getCritterBucks()+info.getCritter().getAge()); getAge doesent exist for some reason
+        info.setCritterBucks(info.getCritterBucks()+11.6);
+        manager.setIndex(4);
+
     }
 
     protected void paintComponent(Graphics g) {

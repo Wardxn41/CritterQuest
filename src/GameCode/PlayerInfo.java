@@ -12,7 +12,7 @@ public class PlayerInfo {
 
         this.SaveFile = 0;
         this.critter = new CritterInfo();
-        this.critterBucks = 0.0;
+        this.critterBucks = 90.0;
         this.unlocks = new boolean[10];  // adjust size as needed
         this.upgrades = new boolean[10]; // adjust size as needed
 
@@ -110,6 +110,14 @@ public class PlayerInfo {
         }
 
     }
+
+    public boolean buy(int i) {
+
+        critterBucks -= 10;
+
+        return true;
+    }
+
 }
 
 
