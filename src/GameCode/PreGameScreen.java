@@ -29,14 +29,12 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         clearPanel();
         frame.setSize(900, 700);
         setLayout(new BorderLayout());
-
         Font uiFont = new Font("SansSerif", Font.BOLD, 16);
         Font largeFont = new Font("SansSerif", Font.BOLD, 24);
 
         // Name Input (Top)
         nameField = new JTextField(20);
         nameField.setFont(uiFont);
-
         JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         namePanel.add(new JLabel("Name:"));
         namePanel.add(nameField);
@@ -48,11 +46,9 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         cardHolderPanel = new JPanel(cardLayout);
         cardHolderPanel.setOpaque(false);
         cardHolderPanel.setPreferredSize(new Dimension(320, 480)); // size of center creature
-
         for (int i = 0; i < speciesOptions.length; i++) {
             String species = speciesOptions[i];
             boolean isUnlocked = unlocked[i];
-
             JLabel imageLabel;
             try {
                 String imagePath = switch (species) {
@@ -83,6 +79,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
 
             JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
             wrapper.setOpaque(false);
+            wrapper.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0)); // Top padding = 40px
             wrapper.add(imageLabel);
             cardHolderPanel.add(wrapper, species);
         }
@@ -104,28 +101,46 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
             });
 
             // Center layout with GridBagLayout for proper vertical centering
-            JPanel centerCarouselPanel = new JPanel(new GridBagLayout());
-            centerCarouselPanel.setOpaque(false);
+        JPanel centerCarouselPanel = new JPanel(new GridBagLayout());
+        centerCarouselPanel.setOpaque(false);
 
-            GridBagConstraints cc = new GridBagConstraints();
-            cc.insets = new Insets(10, 10, 10, 10);
-            cc.gridy = 0;
-            cc.fill = GridBagConstraints.NONE;
+        GridBagConstraints cc = new GridBagConstraints();
+        cc.insets = new Insets(10, 10, 10, 10);
+        cc.gridy = 0;
+        cc.fill = GridBagConstraints.NONE;
+        cc.anchor = GridBagConstraints.CENTER;
 
-            cc.gridx = 0;
-            centerCarouselPanel.add(leftArrow, cc);
+        cc.gridx = 0;
+        centerCarouselPanel.add(leftArrow, cc);
 
-            cc.gridx = 1;
-            centerCarouselPanel.add(cardHolderPanel, cc);
+        cc.gridx = 1;
+        centerCarouselPanel.add(cardHolderPanel, cc);
 
-            cc.gridx = 2;
-            centerCarouselPanel.add(rightArrow, cc);
+        cc.gridx = 2;
+        centerCarouselPanel.add(rightArrow, cc);
 
-            // Add to the main screen center
-            add(centerCarouselPanel, BorderLayout.CENTER);
+// Create the name input panel (was previously in NORTH)
+       // JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+       // namePanel.add(new JLabel("Name:"));
+       // namePanel.add(nameField);
+       // namePanel.setOpaque(false);
+
+        // Create a vertical wrapper to hold both carousel and name panel
+        JPanel verticalCenterWrapper = new JPanel();
+        verticalCenterWrapper.setLayout(new BoxLayout(verticalCenterWrapper, BoxLayout.Y_AXIS));
+        verticalCenterWrapper.setOpaque(false);
+
+// Adjust spacing above and between components
+        verticalCenterWrapper.add(Box.createVerticalStrut(40));        // Push carousel down
+        verticalCenterWrapper.add(namePanel);                          // Float name input up
+        verticalCenterWrapper.add(Box.createVerticalStrut(10));        // Small gap between name & carousel
+        verticalCenterWrapper.add(centerCarouselPanel);                // Carousel stays centered
+
+        add(verticalCenterWrapper, BorderLayout.CENTER);
 
 
-            // Bottom Buttons Panel: Back | Play | Shop
+
+        // Bottom Buttons Panel: Back | Play | Shop
             JButton backButton = new JButton("⮌");
             backButton.setFont(uiFont);
             backButton.setPreferredSize(new Dimension(80, 40));
