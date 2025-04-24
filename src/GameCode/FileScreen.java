@@ -41,7 +41,7 @@ public class FileScreen extends WindowPanel implements ScreenInterface {
         button1.addActionListener(e -> manager.setIndex(0));
 
         // Button 2 - Save Slot 1
-        button2 = new JButton("💾 Save Slot 1 (not implemented)");
+        button2 = new JButton("💾 Save Slot 1");
         styleButton(button2, bigFont, new Color(70, 130, 180), Color.WHITE, Color.WHITE);
         addHoverEffect(button2, new Color(65, 105, 145));
         button2.addActionListener(e -> manager.loadSaveSlot(4,0));
