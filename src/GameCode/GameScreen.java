@@ -10,7 +10,10 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     private CritterInfo critter;
     private Image backgroundImage;
     private Image characterImage;
-
+    private JLabel moneyLabel;
+    private void updateMoneyHUD() {
+        moneyLabel.setText("Critter Bucks: $" + manager.getPlayerInfo().getCritterBucks());
+    }
     public GameScreen() {
         //this.critter = critter;
        // this.statsPanel = new CritterStatsPanel(critter);
@@ -44,39 +47,44 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
         // Create Top Panel with three subpanels
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Left panel (back button)
+        // Left Panel (Back button)
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> calculateRewards());
         leftPanel.add(backButton);
 
-        // Center panel (one button)
-        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton actionButton1 = new JButton("Feed");
-        centerPanel.add(actionButton1);
+        // Center Panel (Money HUD)
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        moneyLabel = new JLabel("Critter Bucks: $" + manager.getPlayerInfo().getCritterBucks());
+        moneyLabel.setFont(new Font("Verdana", Font.BOLD, 18));
+        moneyLabel.setForeground(Color.YELLOW);
+        centerPanel.add(moneyLabel);
 
-        // Right panel (two buttons)
+        // Right Panel (Feed, Drink, Heal buttons)
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton actionButton1 = new JButton("Feed");
         JButton actionButton2 = new JButton("Drink");
         JButton actionButton3 = new JButton("Heal");
+        rightPanel.add(actionButton1);
         rightPanel.add(actionButton2);
         rightPanel.add(actionButton3);
 
+        // Assemble top panel
         topPanel.add(leftPanel, BorderLayout.WEST);
         topPanel.add(centerPanel, BorderLayout.CENTER);
         topPanel.add(rightPanel, BorderLayout.EAST);
 
         add(topPanel, BorderLayout.NORTH);
+
         // Create a container panel for the left side
         JPanel leftContainer = new JPanel(new BorderLayout());
-        leftContainer.setOpaque(false); // transparent if you want
+        leftContainer.setOpaque(false);
 
-// Add the statsPanel to the bottom of the container
+        // Add the statsPanel to the bottom of the container
         leftContainer.add(statsPanel, BorderLayout.SOUTH);
 
-// Add the whole container to the left side
+        // Add the whole container to the left side
         add(leftContainer, BorderLayout.WEST);
-
 
         revalidate();
         repaint();
@@ -114,7 +122,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
 
         PlayerInfo info = manager.getPlayerInfo();
         //info.setCritterBucks(info.getCritterBucks()+info.getCritter().getAge()); getAge doesent exist for some reason
-        info.setCritterBucks(info.getCritterBucks()+11.6);
+        info.setCritterBucks((int) (info.getCritterBucks()+11.6));
         manager.setIndex(4);
 
     }
