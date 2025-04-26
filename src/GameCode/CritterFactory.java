@@ -38,7 +38,7 @@ public class CritterFactory {
 //Bear
     public static CritterInfo createBear(String name) {
         CritterTemplate bearTemplate = new CritterTemplate(
-                "Turtle", 150,
+                "Bear", 150,
                 6, 6,              // slower hunger/thirst decay
                 70, 40, 15,        // thresholds
                 3, 5, 8,           // damage
@@ -49,7 +49,7 @@ public class CritterFactory {
 //WOLF
     public static CritterInfo createWolf(String name) {
         CritterTemplate wolfTemplate = new CritterTemplate(
-                "Turtle", 150,
+                "Wolf", 150,
                 6, 6,              // slower hunger/thirst decay
                 70, 40, 15,        // thresholds
                 3, 5, 8,           // damage

@@ -21,10 +21,11 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     public void calculateVisuals() {
         clearPanel();
         setLayout(new BorderLayout());
+
         this.critter = GameData.activeCritter;
         this.statsPanel = new CritterStatsPanel(critter);
 
-        // load background image from critter template
+        // Load background and character images
         try {
             String path = critter.getTemplate().getBackgroundPath();
             backgroundImage = new ImageIcon(path).getImage();
@@ -32,7 +33,6 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
             System.err.println("Could not load critter background image.");
             e.printStackTrace();
         }
-        // load character image from critter template
         try {
             String charPath = critter.getTemplate().getCharacterPath();
             characterImage = new ImageIcon(charPath).getImage();
@@ -41,21 +41,72 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
             e.printStackTrace();
         }
 
+        // Create Top Panel with three subpanels
+        JPanel topPanel = new JPanel(new BorderLayout());
 
-        JButton backButton = new JButton("Back to pregame screen");
+        // Left panel (back button)
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> calculateRewards());
-        backButton.setBackground(Color.RED);
+        leftPanel.add(backButton);
 
-        JPanel topPanel = new JPanel(new FlowLayout());
+        // Center panel (one button)
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton actionButton1 = new JButton("Feed");
+        centerPanel.add(actionButton1);
 
-        topPanel.add(backButton);
+        // Right panel (two buttons)
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton actionButton2 = new JButton("Drink");
+        JButton actionButton3 = new JButton("Heal");
+        rightPanel.add(actionButton2);
+        rightPanel.add(actionButton3);
+
+        topPanel.add(leftPanel, BorderLayout.WEST);
+        topPanel.add(centerPanel, BorderLayout.CENTER);
+        topPanel.add(rightPanel, BorderLayout.EAST);
+
         add(topPanel, BorderLayout.NORTH);
-        add(statsPanel, BorderLayout.SOUTH);
+        // Create a container panel for the left side
+        JPanel leftContainer = new JPanel(new BorderLayout());
+        leftContainer.setOpaque(false); // transparent if you want
+
+// Add the statsPanel to the bottom of the container
+        leftContainer.add(statsPanel, BorderLayout.SOUTH);
+
+// Add the whole container to the left side
+        add(leftContainer, BorderLayout.WEST);
 
 
-        CritterInfo critter = GameData.activeCritter;
         revalidate();
         repaint();
+    }
+    private void healCritter() {
+        if (critter != null && critter.isAlive()) {
+            critter.updateHealth(20); // Heal 20 points
+            System.out.println(critter.getName() + " was healed!");
+            statsPanel.updateStats();
+        }
+    }
+
+    private void feedCritter() {
+        if (critter != null && critter.isAlive()) {
+            int currentHunger = critter.getHunger();
+            int newHunger = Math.min(100, currentHunger + 25); // Cap at 100
+            critter.setHunger(newHunger);
+            System.out.println(critter.getName() + " was fed!");
+            statsPanel.updateStats();
+        }
+    }
+
+    private void giveWaterToCritter() {
+        if (critter != null && critter.isAlive()) {
+            int currentThirst = critter.getThirst();
+            int newThirst = Math.min(100, currentThirst + 25); // Cap at 100
+            critter.setThirst(newThirst);
+            System.out.println(critter.getName() + " drank water!");
+            statsPanel.updateStats();
+        }
     }
 
     //basically just the you are quiting your creature and getting your critter bucks for it

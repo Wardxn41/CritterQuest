@@ -28,6 +28,15 @@ public class CritterInfo {
     public CritterTemplate getTemplate() {
         return template;
     }
+    public void setHunger(int hunger) {
+        this.hunger = Math.max(0, Math.min(100, hunger));
+    }
+
+    public void setThirst(int thirst) {
+        this.thirst = Math.max(0, Math.min(100, thirst));
+    }
+
+
 
     public void tickUpdate(long currentTime) {
         long elapsed = currentTime - lastUpdatedTime;
@@ -39,12 +48,12 @@ public class CritterInfo {
         thirstDecayTimer += seconds;
 
         if (hungerDecayTimer >= template.hungerDecayRate) {
-            hunger = Math.max(0, hunger - 1);
+            hunger = Math.max(0, hunger - 5);
             hungerDecayTimer = 0;
         }
 
         if (thirstDecayTimer >= template.thirstDecayRate) {
-            thirst = Math.max(0, thirst - 1);
+            thirst = Math.max(0, thirst - 5);
             thirstDecayTimer = 0;
         }
 
@@ -81,7 +90,7 @@ public class CritterInfo {
         lastUpdatedTime = currentTime;
     }
 
-    private void updateHealth(int change) {
+    public void updateHealth(int change) {
         health = Math.max(0, Math.min(template.maxHealth, health + change));
     }
 
