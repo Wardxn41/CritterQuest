@@ -6,7 +6,8 @@ public class CritterInfo {
     private boolean isAlive;
     private long lastUpdatedTime;
     private CritterTemplate template;
-
+private int happyTimer = 0;
+private int lastRewardedAge = 0;
     // Decay timers
     private int hungerDecayTimer, thirstDecayTimer;
     private int warningTimer, dangerTimer, criticalTimer;
@@ -23,6 +24,9 @@ public class CritterInfo {
 
     public CritterInfo() {
         this.template = new CritterTemplate();
+    }
+    public int getAge() {
+        return age;
     }
 
     public CritterTemplate getTemplate() {

@@ -1,6 +1,8 @@
 package GameCode;
 import javax.swing.*;
 import java.awt.*;
+import java.util.TimerTask;
+import java.util.Timer;
 
 public class GameScreen extends WindowPanel implements ScreenInterface {
 
@@ -11,6 +13,10 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     private Image backgroundImage;
     private Image characterImage;
     private JLabel moneyLabel;
+    private Timer incomeTimer;
+    private int happyTimer = 0;
+    private int lastRewardedAge = 0;
+
     private void updateMoneyHUD() {
         moneyLabel.setText("Critter Bucks: $" + manager.getPlayerInfo().getCritterBucks());
     }
@@ -18,6 +24,58 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
         //this.critter = critter;
        // this.statsPanel = new CritterStatsPanel(critter);
        // this.label = new JLabel("this is the main gameplay loop");
+    }
+
+    private String determineMood() {
+        if (!critter.isAlive()) {
+            return "Dead";
+        }
+
+        int health = critter.getHealth();
+        int hunger = critter.getHunger();
+        int thirst = critter.getThirst();
+
+        if (health > 80 && hunger > 80 && thirst > 80) {
+            return "Happy";
+        } else if (hunger < 30 && thirst < 30) {
+            return "Starving & Dehydrated";
+        } else if (hunger < 30) {
+            return "Hungry";
+        } else if (thirst < 30) {
+            return "Thirsty";
+        } else if (health < 30) {
+            return "Sick";
+        } else {
+            return "Content";
+        }
+    }
+    private void checkPassiveIncome() {
+        PlayerInfo player = manager.getPlayerInfo();
+
+        // 1. Happiness Bonus every 30 seconds
+        String mood = determineMood();
+        if (mood.equals("Happy")) {
+            happyTimer++;
+            if (happyTimer >= 30) {
+                player.setCritterBucks(player.getCritterBucks() + 1);
+                updateMoneyHUD();
+                happyTimer = 0;
+                System.out.println("Gained $1 for keeping the critter happy!");
+            }
+        } else {
+            happyTimer = 0; // Reset if not happy
+        }
+
+        // 2. Age Bonus every "Year" milestone
+        int age = critter.getAge(); // We'll fix getAge() below
+        if (age / 60 > lastRewardedAge) { // Every 60 seconds = 1 "year"
+            int yearsPassed = (age / 60) - lastRewardedAge;
+            int reward = yearsPassed * 10;
+            player.setCritterBucks(player.getCritterBucks() + reward);
+            lastRewardedAge += yearsPassed;
+            updateMoneyHUD();
+            System.out.println("Gained $" + reward + " for critter aging!");
+        }
     }
 
     @Override
@@ -44,7 +102,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
             e.printStackTrace();
         }
 
-        // Create Top Panel with three subpanels
+        // Create Top Panel
         JPanel topPanel = new JPanel(new BorderLayout());
 
         // Left Panel (Back button)
@@ -60,35 +118,84 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
         moneyLabel.setForeground(Color.YELLOW);
         centerPanel.add(moneyLabel);
 
-        // Right Panel (Feed, Drink, Heal buttons)
+        // Right Panel (Feed, Drink, Heal, Shop buttons)
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton actionButton1 = new JButton("Feed");
         JButton actionButton2 = new JButton("Drink");
         JButton actionButton3 = new JButton("Heal");
+        JButton shopButton = new JButton("Shop");
         rightPanel.add(actionButton1);
         rightPanel.add(actionButton2);
         rightPanel.add(actionButton3);
+        rightPanel.add(shopButton);
 
         // Assemble top panel
         topPanel.add(leftPanel, BorderLayout.WEST);
         topPanel.add(centerPanel, BorderLayout.CENTER);
         topPanel.add(rightPanel, BorderLayout.EAST);
-
         add(topPanel, BorderLayout.NORTH);
 
-        // Create a container panel for the left side
+        // Left Container for Stats Panel
         JPanel leftContainer = new JPanel(new BorderLayout());
         leftContainer.setOpaque(false);
-
-        // Add the statsPanel to the bottom of the container
         leftContainer.add(statsPanel, BorderLayout.SOUTH);
-
-        // Add the whole container to the left side
         add(leftContainer, BorderLayout.WEST);
+        // Start Passive Income Timer
+        incomeTimer = new Timer(true);
+        incomeTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                SwingUtilities.invokeLater(() -> {
+                    if (critter != null) {
+                        critter.tickUpdate(System.currentTimeMillis()); // Update critter needs
+                        statsPanel.updateStats(); // Refresh health/hunger/thirst/mood display
+                        checkPassiveIncome();
+                    }
+                });
+            }
+        }, 0, 1000); // every 1 second
+
+
+        // Button Actions with Money Costs
+        actionButton1.addActionListener(e -> {
+            if (manager.getPlayerInfo().buy(10)) { // Feed cost 10
+                feedCritter();
+                updateMoneyHUD();
+                System.out.println("Fed the critter!");
+            } else {
+                System.out.println("Not enough Critter Bucks to feed!");
+            }
+        });
+
+        actionButton2.addActionListener(e -> {
+            if (manager.getPlayerInfo().buy(8)) { // Drink cost 8
+                giveWaterToCritter();
+                updateMoneyHUD();
+                System.out.println("Gave the critter water!");
+            } else {
+                System.out.println("Not enough Critter Bucks to drink!");
+            }
+        });
+
+        actionButton3.addActionListener(e -> {
+            if (manager.getPlayerInfo().buy(15)) { // Heal cost 15
+                healCritter();
+                updateMoneyHUD();
+                System.out.println("Healed the critter!");
+            } else {
+                System.out.println("Not enough Critter Bucks to heal!");
+            }
+        });
+
+        shopButton.addActionListener(e -> {
+            manager.setIndex(7); // Assuming your ShopScreen is screen 5
+        });
 
         revalidate();
         repaint();
     }
+
+
     private void healCritter() {
         if (critter != null && critter.isAlive()) {
             critter.updateHealth(20); // Heal 20 points

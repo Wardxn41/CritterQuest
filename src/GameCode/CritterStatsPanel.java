@@ -45,6 +45,7 @@ public class CritterStatsPanel extends JPanel {
                 SwingUtilities.invokeLater(() -> {
                     critter.tickUpdate(System.currentTimeMillis());
                     updateStats();
+
                 });
             }
         }, 0, 1000);
