@@ -20,6 +20,7 @@ private int lastRewardedAge = 0;
         this.thirst = 100;
         this.isAlive = true;
         this.lastUpdatedTime = System.currentTimeMillis();
+
     }
 
     public CritterInfo() {
@@ -40,6 +41,9 @@ private int lastRewardedAge = 0;
         this.thirst = Math.max(0, Math.min(100, thirst));
     }
 
+    public int getDisplayAge() {
+        return age / 120; // 120 seconds = 1 year
+    }
 
 
     public void tickUpdate(long currentTime) {
@@ -50,6 +54,9 @@ private int lastRewardedAge = 0;
         // Resource decay
         hungerDecayTimer += seconds;
         thirstDecayTimer += seconds;
+
+
+
 
         if (hungerDecayTimer >= template.hungerDecayRate) {
             hunger = Math.max(0, hunger - 5);

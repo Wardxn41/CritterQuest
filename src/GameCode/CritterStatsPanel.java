@@ -10,6 +10,8 @@ public class CritterStatsPanel extends JPanel {
     private JLabel nameLabel;
     private JLabel statusLabel;
     private JLabel moodLabel;
+    private JLabel ageLabel;
+
     private JProgressBar healthBar;
     private JProgressBar hungerBar;
     private JProgressBar thirstBar;
@@ -24,7 +26,7 @@ public class CritterStatsPanel extends JPanel {
         nameLabel = makeStyledLabel();
         statusLabel = makeStyledLabel();
         moodLabel = makeStyledLabel();
-
+        ageLabel = makeStyledLabel();
         healthBar = makeStyledBar(Color.RED, critter.getTemplate().maxHealth);
         hungerBar = makeStyledBar(Color.ORANGE, 100);
         thirstBar = makeStyledBar(Color.CYAN, 100);
@@ -35,7 +37,7 @@ public class CritterStatsPanel extends JPanel {
         add(createRow(thirstBar));
         add(createRow(statusLabel));
         add(createRow(moodLabel));
-
+        add(createRow(ageLabel));
         updateStats();
 
         // Update every second
@@ -92,6 +94,8 @@ public class CritterStatsPanel extends JPanel {
 
         statusLabel.setText("Status: " + (critter.isAlive() ? "Alive" : "Dead"));
         moodLabel.setText("Mood: " + determineMood());
+        ageLabel.setText("Age: " + critter.getDisplayAge() + " years");
+
     }
 
     private String determineMood() {

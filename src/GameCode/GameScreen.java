@@ -16,6 +16,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     private Timer incomeTimer;
     private int happyTimer = 0;
     private int lastRewardedAge = 0;
+    private int lastBirthdayAge = 0;
 
     private void updateMoneyHUD() {
         moneyLabel.setText("Critter Bucks: $" + manager.getPlayerInfo().getCritterBucks());
@@ -66,16 +67,26 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
             happyTimer = 0; // Reset if not happy
         }
 
-        // 2. Age Bonus every "Year" milestone
-        int age = critter.getAge(); // We'll fix getAge() below
-        if (age / 60 > lastRewardedAge) { // Every 60 seconds = 1 "year"
-            int yearsPassed = (age / 60) - lastRewardedAge;
-            int reward = yearsPassed * 10;
-            player.setCritterBucks(player.getCritterBucks() + reward);
-            lastRewardedAge += yearsPassed;
+        // 2. Birthday Celebration (every 2 minutes = 1 year)
+        int displayAge = critter.getDisplayAge();
+        if (displayAge > lastBirthdayAge) {
+            // New year reached!
+            lastBirthdayAge = displayAge;
+
+            // Reward CritterBucks for birthday
+            player.setCritterBucks(player.getCritterBucks() + 20);
             updateMoneyHUD();
-            System.out.println("Gained $" + reward + " for critter aging!");
+
+            // Show Birthday Popup
+            JOptionPane.showMessageDialog(this,
+                    "🎉 Happy Birthday, " + critter.getName() + "! 🎂\nYou earned 20 Critter Bucks!",
+                    "Birthday Celebration!",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            System.out.println(critter.getName() + " had a birthday! 🎂");
         }
+
     }
 
     @Override
