@@ -18,8 +18,8 @@ public class TitleScreen extends WindowPanel implements ScreenInterface {
 
     public TitleScreen() {
         try {
-            backgroundImage = ImageIO.read(new File("images/TitleBackground.png"));
-            titleImage = ImageIO.read(new File("images/TitleScreenTitle.png"));
+            backgroundImage = ImageIO.read(new File("images/background/TitleBackground.png"));
+            titleImage = ImageIO.read(new File("images/icons/TitleScreenTitle.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

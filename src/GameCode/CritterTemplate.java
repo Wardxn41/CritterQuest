@@ -81,7 +81,14 @@ public class CritterTemplate {
     public String getBackgroundPath() {
         return backgroundPath;
     }
+    public String getSpeciesName() {
+        return speciesName;
+    }
+
     public String getCharacterPath(){ return characterPath; }
+
+
+
 }
 
 

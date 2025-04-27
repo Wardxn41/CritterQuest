@@ -11,7 +11,7 @@ public class CritterFactory {
                 5, 15, 25, // damage per threshold
                 20, 30, 50, // timers
                 "images/background/turtleBackground.png",
-                "images/creatures/turtleCritter_transparent.png",1, // Easy
+                "images/creatures/TurtleCritter.png",1, // Easy
                 "Tanky and slow. Easy to care for."
         );
         return new CritterInfo(name, turtleTemplate);
@@ -26,7 +26,7 @@ public class CritterFactory {
                 15, 20, 30, // damage per threshold
                 10, 20, 30, // timers
                 "images/background/whaleBackground.png",
-                "images/creatures/whaleCritter_transparent.png", 4,
+                "images/creatures/WhaleCritter.png", 4,
                 "Massive thirst drain. Needs constant hydration"
         );
         return new CritterInfo(name, whaleTemplate);
@@ -41,7 +41,7 @@ public class CritterFactory {
                 10, 20, 25, // damage per threshold
                 25, 35, 50, // timers
                 "images/background/mushroomManBackground.png",
-                "images/creatures/mushroomManCritter_transparent.png", 2,
+                "images/creatures/MushroomManCritter.png", 2,
                 "Low maintenance but fragile if neglected"
         );
         return new CritterInfo(name, mushroomTemplate);
@@ -56,7 +56,7 @@ public class CritterFactory {
                 10, 15, 20, // damage per threshold
                 15, 20, 30, // timers
                 "images/background/bearBackground.png",
-                "images/creatures/bearCritter_transparent.png", 3,
+                "images/creatures/BearCritter.png", 3,
                 "Tough but needs moderate attention to stay healthy"
         );
         return new CritterInfo(name, bearTemplate);
@@ -71,11 +71,23 @@ public class CritterFactory {
                 10, 20, 30, // damage per threshold
                 12, 18, 25, // timers
                 "images/background/wolfBackground.png",
-                "images/creatures/wolfCritter_transparent.png", 5,
+                "images/creatures/WolfCritter.png", 5,
                 "Wild and fast metabolism. Needs constant feeding!"
         );
         return new CritterInfo(name, wolfTemplate);
     }
+
+    public static CritterTemplate getTemplateForSpecies(String species) {
+        return switch (species) {
+            case "Turtle" -> createTurtle("Temp").getTemplate();
+            case "Bear" -> createBear("Temp").getTemplate();
+            case "Wolf" -> createWolf("Temp").getTemplate();
+            case "Whale" -> createWhale("Temp").getTemplate();
+            case "Mushroom Man" -> createMushroom_Man("Temp").getTemplate();
+            default -> new CritterTemplate(); // Dummy fallback
+        };
+    }
+
 }
 
 

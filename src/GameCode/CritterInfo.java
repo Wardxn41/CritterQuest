@@ -44,6 +44,11 @@ public class CritterInfo {
         return age / 60;
     }
 
+    public void setHealth(int health) {
+        this.health = Math.max(0, Math.min(template.maxHealth, health));
+    }
+
+
 
     public void tickUpdate(long currentTime) {
         long elapsed = currentTime - lastUpdatedTime;

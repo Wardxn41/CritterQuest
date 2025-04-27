@@ -13,7 +13,7 @@ public class FileScreen extends WindowPanel implements ScreenInterface {
 
     public FileScreen() {
         try {
-            backgroundImage = new ImageIcon("images/PreGameBackground.png").getImage();
+            backgroundImage = new ImageIcon("images/background/PreGameBackground.png").getImage();
         } catch (Exception e) {
             System.err.println("Could not load background image");
             e.printStackTrace();

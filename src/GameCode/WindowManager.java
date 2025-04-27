@@ -2,7 +2,6 @@ package GameCode;
 
 import java.util.List;
 
-
 public class WindowManager {
 
     private int screenIndex = 0;
@@ -11,11 +10,11 @@ public class WindowManager {
     private SaveFileManager saveFileManager;
 
     public WindowManager(List<ScreenInterface> Screens) {
+        this.saveFileManager = new SaveFileManager();
+        this.playerInfo = new PlayerInfo();
         this.Screens = Screens;
         massSetManager();
         ShowVisuals();
-        this.saveFileManager = new SaveFileManager();
-        this.playerInfo = new PlayerInfo();
     }
 
     public void ShowVisuals() {
@@ -28,40 +27,33 @@ public class WindowManager {
     }
 
     public void saveInSlot(int index, int saveIndex) {
-        saveFileManager.SaveToFile(playerInfo, saveIndex);
+        saveFileManager.saveToFile(playerInfo, saveIndex);
         this.screenIndex = index;
         ShowVisuals();
     }
 
     public void loadSaveSlot(int index, int saveIndex) {
-        saveFileManager.LoadSave(playerInfo, saveIndex);
+        saveFileManager.loadSave(playerInfo, saveIndex);
         this.screenIndex = index;
         ShowVisuals();
     }
 
     public int getSaveIndex() {
-
         return playerInfo.getSaveFile();
-
     }
 
     public void massSetManager() {
-        for (ScreenInterface Screen : Screens) {
-            Screen.setManager(this);
+        for (ScreenInterface screen : Screens) {
+            screen.setManager(this);
         }
     }
 
     public void setPlayerInfo(PlayerInfo playerInfo) {
-
         this.playerInfo = playerInfo;
-
     }
 
     public PlayerInfo getPlayerInfo() {
-
         return playerInfo;
-
     }
-
 }
 

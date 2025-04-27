@@ -18,7 +18,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
 
     public PreGameScreen() {
         try {
-            backgroundImage = new ImageIcon("images/PreGameBackground.png").getImage();
+            backgroundImage = new ImageIcon("images/background/PreGameBackground.png").getImage();
         } catch (Exception e) {
             System.err.println("Could not load background image");
             e.printStackTrace();
@@ -56,11 +56,11 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
             JLabel imageLabel;
             try {
                 String imagePath = switch (species) {
-                    case "Turtle" -> "images/creatures/turtleCritter_transparent.png";
-                    case "Whale" -> "images/creatures/whaleCritter_transparent.png";
-                    case "Mushroom Man" -> "images/creatures/mushroomManCritter_transparent.png";
-                    case "Bear" -> "images/creatures/bearCritter_transparent.png";
-                    case "Wolf" -> "images/creatures/wolfCritter_transparent.png";
+                    case "Turtle" -> "images/creatures/TurtleCritter.png";
+                    case "Whale" -> "images/creatures/WhaleCritter.png";
+                    case "Mushroom Man" -> "images/creatures/MushroomManCritter.png";
+                    case "Bear" -> "images/creatures/BearCritter.png";
+                    case "Wolf" -> "images/creatures/WolfCritter.png";
                     default -> "images/creatures/temp.jpg";
                 };
                 ImageIcon icon = new ImageIcon(imagePath);

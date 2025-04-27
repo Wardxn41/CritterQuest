@@ -5,6 +5,7 @@ import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 public class GameScreen extends WindowPanel implements ScreenInterface {
 
     private CritterInfo critter;
@@ -12,7 +13,8 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     private Image backgroundImage;
     private Image characterImage;
     private JLabel moneyLabel;
-
+    private RandomEventManager randomEventManager;
+    private Timer randomEventTimer;
     private JButton feedButton, drinkButton, healButton, shopButton;
     private Timer incomeTimer;
     private int happyTimer = 0;
@@ -139,6 +141,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
 
         this.hasHandledDeath = false;
         this.critter = GameData.activeCritter;
+        randomEventManager = new RandomEventManager(this);
         this.statsPanel = new CritterStatsPanel(critter);
 
         // Load Images
@@ -228,6 +231,8 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     private void startIncomeTimer() {
         incomeTimer = new Timer(true);
         incomeTimer.scheduleAtFixedRate(new TimerTask() {
+            private int secondsPassed = 0;
+
             @Override
             public void run() {
                 SwingUtilities.invokeLater(() -> {
@@ -236,10 +241,15 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
                         statsPanel.updateStats();
                         checkPassiveIncome();
                         checkCritterDeath();
+
+                        secondsPassed++;
+                        if (secondsPassed % 30 == 0) { // every 30 seconds
+                            randomEventManager.tryTriggerRandomEvent();
+                        }
                     }
                 });
             }
-        }, 0, 1000); // Every second
+        }, 0, 1000);
     }
 
     private void healCritter() {
@@ -275,21 +285,41 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         if (backgroundImage != null) {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
-        if (characterImage != null) {
-            int charWidth = characterImage.getWidth(this);
-            int charHeight = characterImage.getHeight(this);
-            int x = (getWidth() - charWidth) / 3;
-            int y = (getHeight() - charHeight) / 3;
-            g.drawImage(characterImage, x, y, this);
+
+        if (critter != null && characterImage != null) {
+            int newWidth;
+            int newHeight;
+
+            if (critter.getSpecies().equals("Whale")) {
+                newWidth = 600;
+                newHeight = 500;
+            } else {
+                newWidth = 300;
+                newHeight = 300;
+            }
+
+            int x = (getWidth() - newWidth) / 2;
+            int y = getHeight() - newHeight - 50;
+
+            g.drawImage(characterImage, x, y, newWidth, newHeight, this);
         }
     }
+
+
 
     @Override
     public void clearPanel() {
         removeAll();
+        if (incomeTimer != null) {
+            incomeTimer.cancel();
+        }
+        if (randomEventTimer != null) {
+            randomEventTimer.cancel();
+        }
         revalidate();
         repaint();
     }

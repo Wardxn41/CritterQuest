@@ -34,6 +34,10 @@ public abstract class WindowPanel extends JPanel {
         CardLayout cl = (CardLayout) panel.getLayout();
         cl.show(panel, screenName);
     }
+    public WindowManager getManager() {
+        return manager;
+    }
+
 
     public abstract void calculateVisuals();
 
