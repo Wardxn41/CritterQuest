@@ -6,8 +6,7 @@ public class CritterInfo {
     private boolean isAlive;
     private long lastUpdatedTime;
     private CritterTemplate template;
-private int happyTimer = 0;
-private int lastRewardedAge = 0;
+
     // Decay timers
     private int hungerDecayTimer, thirstDecayTimer;
     private int warningTimer, dangerTimer, criticalTimer;
@@ -42,7 +41,7 @@ private int lastRewardedAge = 0;
     }
 
     public int getDisplayAge() {
-        return age / 120; // 120 seconds = 1 year
+        return age / 100;
     }
 
 
@@ -54,9 +53,6 @@ private int lastRewardedAge = 0;
         // Resource decay
         hungerDecayTimer += seconds;
         thirstDecayTimer += seconds;
-
-
-
 
         if (hungerDecayTimer >= template.hungerDecayRate) {
             hunger = Math.max(0, hunger - 5);

@@ -20,12 +20,16 @@ public class CritterTemplate {
     public int criticalTimer;
     private String characterPath;
     private String backgroundPath;
+    public int difficultyRating; // 1 (easy) to 5 (very hard)
+    public String description;   // Short blurb about the critter
+
     // Constructor
     public CritterTemplate(String speciesName, int maxHealth,
                            int hungerDecayRate, int thirstDecayRate,
                            int warningThreshold, int dangerThreshold, int criticalThreshold,
                            int warningDamage, int dangerDamage, int criticalDamage,
-                           int warningTimer, int dangerTimer, int criticalTimer, String backgroundPath, String characterPath) {
+                           int warningTimer, int dangerTimer, int criticalTimer, String backgroundPath, String characterPath,
+                           int difficultyRating, String description) {
 
         this.speciesName = speciesName;
         this.maxHealth = maxHealth;
@@ -47,6 +51,8 @@ public class CritterTemplate {
 
         this.backgroundPath = backgroundPath;
         this.characterPath = characterPath;
+        this.difficultyRating = difficultyRating;
+        this.description = description;
     }
 
     public CritterTemplate() {

@@ -13,6 +13,8 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
     private final boolean[] unlocked = {true, true, true, true, true};
     private CardLayout cardLayout;
     private JPanel cardHolderPanel;
+    private JPanel starPanel;
+    private JLabel descriptionLabel;
 
     public PreGameScreen() {
         try {
@@ -28,12 +30,14 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         clearPanel();
         frame.setSize(900, 700);
         setLayout(new BorderLayout());
+
         Font uiFont = new Font("SansSerif", Font.BOLD, 16);
         Font largeFont = new Font("SansSerif", Font.BOLD, 24);
 
-        // Name Input Panel
+        // --- Name Input Panel ---
         nameField = new JTextField(20);
         nameField.setFont(uiFont);
+
         JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel nameLabel = new JLabel("Name:");
         nameLabel.setForeground(Color.WHITE);
@@ -42,7 +46,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         namePanel.add(nameField);
         namePanel.setOpaque(false);
 
-        // Creature Card Carousel
+        // --- Creature Card Carousel ---
         cardLayout = new CardLayout();
         cardHolderPanel = new JPanel(cardLayout);
         cardHolderPanel.setOpaque(false);
@@ -74,13 +78,14 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
             cardHolderPanel.add(wrapper, species);
         }
 
-        // Carousel Navigation Arrows
+        // --- Carousel Navigation ---
         JButton leftArrow = new JButton("←");
         leftArrow.setFont(largeFont);
         leftArrow.setPreferredSize(new Dimension(60, 60));
         leftArrow.addActionListener(e -> {
             currentIndex = (currentIndex - 1 + speciesOptions.length) % speciesOptions.length;
             cardLayout.show(cardHolderPanel, speciesOptions[currentIndex]);
+            updateCritterInfoDisplay();
         });
 
         JButton rightArrow = new JButton("→");
@@ -89,6 +94,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         rightArrow.addActionListener(e -> {
             currentIndex = (currentIndex + 1) % speciesOptions.length;
             cardLayout.show(cardHolderPanel, speciesOptions[currentIndex]);
+            updateCritterInfoDisplay();
         });
 
         JPanel centerCarouselPanel = new JPanel(new GridBagLayout());
@@ -102,17 +108,43 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         cc.gridx = 1; centerCarouselPanel.add(cardHolderPanel, cc);
         cc.gridx = 2; centerCarouselPanel.add(rightArrow, cc);
 
+        // --- Critter Info (Stars + Description) ---
+        starPanel = new JPanel();
+        starPanel.setOpaque(false);
+        starPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
+
+        descriptionLabel = new JLabel();
+        descriptionLabel.setFont(new Font("Verdana", Font.PLAIN, 14));
+        descriptionLabel.setForeground(Color.WHITE);
+        descriptionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel infoPanel = new JPanel();
+        infoPanel.setOpaque(false);
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.add(Box.createVerticalStrut(10));
+        infoPanel.add(starPanel); // << ADDED HERE
+        infoPanel.add(Box.createVerticalStrut(5));
+        infoPanel.add(descriptionLabel);
+
+        // --- Combine Carousel + Info ---
+        JPanel carouselAndInfoPanel = new JPanel();
+        carouselAndInfoPanel.setLayout(new BoxLayout(carouselAndInfoPanel, BoxLayout.Y_AXIS));
+        carouselAndInfoPanel.setOpaque(false);
+        carouselAndInfoPanel.add(centerCarouselPanel);
+        carouselAndInfoPanel.add(infoPanel);
+
+        // --- Center Wrapper ---
         JPanel verticalCenterWrapper = new JPanel();
         verticalCenterWrapper.setLayout(new BoxLayout(verticalCenterWrapper, BoxLayout.Y_AXIS));
         verticalCenterWrapper.setOpaque(false);
         verticalCenterWrapper.add(Box.createVerticalStrut(30));
         verticalCenterWrapper.add(namePanel);
-        verticalCenterWrapper.add(Box.createVerticalStrut(10));
-        verticalCenterWrapper.add(centerCarouselPanel);
+        verticalCenterWrapper.add(Box.createVerticalStrut(20));
+        verticalCenterWrapper.add(carouselAndInfoPanel);
 
         add(verticalCenterWrapper, BorderLayout.CENTER);
 
-        // Bottom Panel: Back | Play | Shop
+        // --- Bottom Panel: Back | Play | Shop ---
         JButton backButton = new JButton("⮌");
         backButton.setFont(uiFont);
         backButton.setPreferredSize(new Dimension(80, 40));
@@ -142,7 +174,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
             }
         });
 
-        JButton shopButton = new JButton("Shop - "+manager.getPlayerInfo().getCritterBucks()+"$");
+        JButton shopButton = new JButton("Shop - " + manager.getPlayerInfo().getCritterBucks() + "$");
         shopButton.setFont(uiFont);
         shopButton.setPreferredSize(new Dimension(160, 40));
         shopButton.addActionListener(e -> manager.setIndex(7));
@@ -155,8 +187,61 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         bottomPanel.add(shopButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        // --- Finish Up ---
+        updateCritterInfoDisplay();
         revalidate();
         repaint();
+    }
+
+    private void updateCritterInfoDisplay() {
+        CritterTemplate template = getSelectedCritterTemplate();
+        if (template != null) {
+            updateStarDisplay(template.difficultyRating);
+            descriptionLabel.setText(template.description);
+        }
+    }
+
+    private void updateStarDisplay(int rating) {
+        starPanel.removeAll();
+
+        try {
+            ImageIcon filledIcon = new ImageIcon("images/icons/StarFilled.png");
+            ImageIcon emptyIcon = new ImageIcon("images/icons/StarEmpty.png");
+
+            // Resize the images to 24x24 pixels
+            Image filledImage = filledIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+            Image emptyImage = emptyIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+
+            ImageIcon scaledFilled = new ImageIcon(filledImage);
+            ImageIcon scaledEmpty = new ImageIcon(emptyImage);
+
+            for (int i = 0; i < 5; i++) {
+                JLabel star = new JLabel(i < rating ? scaledFilled : scaledEmpty);
+                starPanel.add(star);
+            }
+        } catch (Exception e) {
+            System.err.println("Could not load or resize star images.");
+            e.printStackTrace();
+        }
+
+        starPanel.revalidate();
+        starPanel.repaint();
+    }
+
+
+    private CritterTemplate getSelectedCritterTemplate() {
+        if (speciesOptions != null && currentIndex >= 0 && currentIndex < speciesOptions.length) {
+            String selectedSpecies = speciesOptions[currentIndex];
+            return switch (selectedSpecies) {
+                case "Turtle" -> CritterFactory.createTurtle("Temp").getTemplate();
+                case "Whale" -> CritterFactory.createWhale("Temp").getTemplate();
+                case "Mushroom Man" -> CritterFactory.createMushroom_Man("Temp").getTemplate();
+                case "Bear" -> CritterFactory.createBear("Temp").getTemplate();
+                case "Wolf" -> CritterFactory.createWolf("Temp").getTemplate();
+                default -> null;
+            };
+        }
+        return null;
     }
 
     @Override
@@ -174,5 +259,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         repaint();
     }
 }
+
+
 
 
