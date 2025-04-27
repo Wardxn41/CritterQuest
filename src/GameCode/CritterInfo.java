@@ -41,7 +41,7 @@ public class CritterInfo {
     }
 
     public int getDisplayAge() {
-        return age / 100;
+        return age / 60;
     }
 
 
