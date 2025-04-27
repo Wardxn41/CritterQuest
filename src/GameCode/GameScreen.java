@@ -18,7 +18,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     private int happyTimer = 0;
     private int lastBirthdayAge = 0;
     private boolean hasHandledDeath = false;
-
+    private FadeOverlay fadeOverlay;
 
     public GameScreen() {}
 
@@ -73,26 +73,55 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
 
     private void checkCritterDeath() {
         if (critter != null && !critter.isAlive() && !hasHandledDeath) {
-            hasHandledDeath = true; // set immediately to prevent race conditions
-
-            stopIncomeTimer(); // stop background timer immediately
+            hasHandledDeath = true;
+            stopIncomeTimer();
 
             feedButton.setEnabled(false);
             drinkButton.setEnabled(false);
             healButton.setEnabled(false);
 
-            // Use invokeLater to safely show popup AFTER timer stopped
+            new Thread(() -> {
+                try {
+                    // Fade only to 75% opacity at first
+                    for (int i = 0; i <= 75; i++) {
+                        float opacity = i / 100f;
+                        fadeOverlay.setOpacity(opacity);
+                        Thread.sleep(10);
+                    }
 
-                JOptionPane.showMessageDialog(this,
-                        critter.getName() + " has passed away... 💀",
-                        "Critter Death",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
+                    // Now on UI thread, show popup
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(this,
+                                critter.getName() + " has passed away... 💀",
+                                "Critter Death",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
 
-                manager.setIndex(8); // Move to Game Over Screen
+                        // After clicking OK, finish fading to 100%
+                        new Thread(() -> {
+                            try {
+                                for (int i = 76; i <= 100; i++) {
+                                    float opacity = i / 100f;
+                                    fadeOverlay.setOpacity(opacity);
+                                    Thread.sleep(10);
+                                }
+                                SwingUtilities.invokeLater(() -> manager.setIndex(8));
+                                fadeOverlay.setOpacity(0);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }).start();
+                    });
 
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
         }
     }
+
+
+
     private void stopIncomeTimer() {
         if (incomeTimer != null) {
             incomeTimer.cancel();
@@ -104,6 +133,10 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     public void calculateVisuals() {
         clearPanel();
         setLayout(new BorderLayout());
+        fadeOverlay = new FadeOverlay();
+        fadeOverlay.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+        frame.getLayeredPane().add(fadeOverlay, JLayeredPane.DRAG_LAYER); // add on top
+
         this.hasHandledDeath = false;
         this.critter = GameData.activeCritter;
         this.statsPanel = new CritterStatsPanel(critter);
@@ -154,7 +187,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         moneyLabel = new JLabel("Critter Bucks: $" + manager.getPlayerInfo().getCritterBucks());
         moneyLabel.setFont(new Font("Verdana", Font.BOLD, 18));
-        moneyLabel.setForeground(Color.YELLOW);
+        moneyLabel.setForeground(Color.BLACK);
         centerPanel.add(moneyLabel);
 
         // Action Buttons

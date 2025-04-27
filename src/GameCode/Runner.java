@@ -13,7 +13,7 @@ public class Runner {
                 new CreditsScreen(), new PreGameScreen(), new GameScreen(), new CritterSelectScreen(),
                 //id = 3           //id = 4          //id = 5               //id = 6?
                 new ShopScreen(),   new GameOverScreen()
-                //id = 7           //id =           //id =
+                //id = 7           //id = 8         //id =
         ));
     }
 

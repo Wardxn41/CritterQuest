@@ -35,7 +35,7 @@ public class GameOverScreen extends WindowPanel implements ScreenInterface {
         JButton creditsButton = new JButton("View Credits");
         creditsButton.setFont(new Font("Verdana", Font.BOLD, 20));
         creditsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        creditsButton.addActionListener(e -> manager.setIndex(8)); // Let's say CreditsScreen is index 8
+        creditsButton.addActionListener(e -> manager.setIndex(3)); // Let's say CreditsScreen is index 8
 
         add(Box.createVerticalStrut(100)); // space at top
         add(titleLabel);
