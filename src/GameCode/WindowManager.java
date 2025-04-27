@@ -16,6 +16,9 @@ public class WindowManager {
         massSetManager();
         ShowVisuals();
     }
+    public ScreenInterface getScreen(int index) {
+        return Screens.get(index);
+    }
 
     public void ShowVisuals() {
         Screens.get(screenIndex).ShowVisuals();

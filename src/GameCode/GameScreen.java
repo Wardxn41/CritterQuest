@@ -5,7 +5,6 @@ import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 public class GameScreen extends WindowPanel implements ScreenInterface {
 
     private CritterInfo critter;
@@ -15,8 +14,8 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     private JLabel moneyLabel;
     private RandomEventManager randomEventManager;
     private Timer randomEventTimer;
-    private JButton feedButton, drinkButton, healButton, shopButton;
     private Timer incomeTimer;
+    private JButton feedButton, drinkButton, healButton, shopButton;
     private int happyTimer = 0;
     private int lastBirthdayAge = 0;
     private boolean hasHandledDeath = false;
@@ -30,7 +29,6 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
 
     private String determineMood() {
         if (!critter.isAlive()) return "Dead";
-
         int health = critter.getHealth();
         int hunger = critter.getHunger();
         int thirst = critter.getThirst();
@@ -53,7 +51,6 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
                 player.setCritterBucks(player.getCritterBucks() + 1);
                 updateMoneyHUD();
                 happyTimer = 0;
-                System.out.println("Gained $1 for keeping the critter happy!");
             }
         } else {
             happyTimer = 0;
@@ -64,7 +61,6 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
             lastBirthdayAge = displayAge;
             player.setCritterBucks(player.getCritterBucks() + 20);
             updateMoneyHUD();
-
             JOptionPane.showMessageDialog(this,
                     "🎉 Happy Birthday, " + critter.getName() + "! 🎂\nYou earned 20 Critter Bucks!",
                     "Birthday Celebration!",
@@ -76,7 +72,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     private void checkCritterDeath() {
         if (critter != null && !critter.isAlive() && !hasHandledDeath) {
             hasHandledDeath = true;
-            stopIncomeTimer();
+            stopTimers();
 
             feedButton.setEnabled(false);
             drinkButton.setEnabled(false);
@@ -84,14 +80,12 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
 
             new Thread(() -> {
                 try {
-                    // Fade only to 75% opacity at first
                     for (int i = 0; i <= 75; i++) {
                         float opacity = i / 100f;
                         fadeOverlay.setOpacity(opacity);
                         Thread.sleep(10);
                     }
 
-                    // Now on UI thread, show popup
                     SwingUtilities.invokeLater(() -> {
                         JOptionPane.showMessageDialog(this,
                                 critter.getName() + " has passed away... 💀",
@@ -99,7 +93,6 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
                                 JOptionPane.INFORMATION_MESSAGE
                         );
 
-                        // After clicking OK, finish fading to 100%
                         new Thread(() -> {
                             try {
                                 for (int i = 76; i <= 100; i++) {
@@ -107,7 +100,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
                                     fadeOverlay.setOpacity(opacity);
                                     Thread.sleep(10);
                                 }
-                                SwingUtilities.invokeLater(() -> manager.setIndex(8));
+                                SwingUtilities.invokeLater(() -> manager.setIndex(8)); // GameOver screen
                                 fadeOverlay.setOpacity(0);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
@@ -122,12 +115,14 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
         }
     }
 
-
-
-    private void stopIncomeTimer() {
+    private void stopTimers() {
         if (incomeTimer != null) {
             incomeTimer.cancel();
             incomeTimer = null;
+        }
+        if (randomEventTimer != null) {
+            randomEventTimer.cancel();
+            randomEventTimer = null;
         }
     }
 
@@ -135,29 +130,26 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     public void calculateVisuals() {
         clearPanel();
         setLayout(new BorderLayout());
+
         fadeOverlay = new FadeOverlay();
         fadeOverlay.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-        frame.getLayeredPane().add(fadeOverlay, JLayeredPane.DRAG_LAYER); // add on top
+        frame.getLayeredPane().add(fadeOverlay, JLayeredPane.DRAG_LAYER);
 
         this.hasHandledDeath = false;
         this.critter = GameData.activeCritter;
         randomEventManager = new RandomEventManager(this);
         this.statsPanel = new CritterStatsPanel(critter);
 
-        // Load Images
         loadImages();
 
-        // Top Panel (Back, Money, Actions)
         JPanel topPanel = buildTopPanel();
         add(topPanel, BorderLayout.NORTH);
 
-        // Left Container for Stats
         JPanel leftContainer = new JPanel(new BorderLayout());
         leftContainer.setOpaque(false);
         leftContainer.add(statsPanel, BorderLayout.SOUTH);
         add(leftContainer, BorderLayout.WEST);
 
-        // Start Passive Income Timer
         startIncomeTimer();
 
         revalidate();
@@ -180,20 +172,17 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
     private JPanel buildTopPanel() {
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Back Button
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> calculateRewards());
         leftPanel.add(backButton);
 
-        // Money HUD
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         moneyLabel = new JLabel("Critter Bucks: $" + manager.getPlayerInfo().getCritterBucks());
         moneyLabel.setFont(new Font("Verdana", Font.BOLD, 18));
         moneyLabel.setForeground(Color.BLACK);
         centerPanel.add(moneyLabel);
 
-        // Action Buttons
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         feedButton = new JButton("Feed");
         drinkButton = new JButton("Drink");
@@ -203,7 +192,10 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
         feedButton.addActionListener(e -> attemptAction(() -> feedCritter(), 10));
         drinkButton.addActionListener(e -> attemptAction(() -> giveWaterToCritter(), 8));
         healButton.addActionListener(e -> attemptAction(() -> healCritter(), 15));
-        shopButton.addActionListener(e -> manager.setIndex(7)); // Shop screen assumed to be index 7
+        shopButton.addActionListener(e -> {
+            ((ShopScreen) manager.getScreen(7)).setReturnScreen(5); // 🛒 When clicking shop
+            manager.setIndex(7);
+        });
 
         rightPanel.add(feedButton);
         rightPanel.add(drinkButton);
@@ -243,7 +235,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
                         checkCritterDeath();
 
                         secondsPassed++;
-                        if (secondsPassed % 30 == 0) { // every 30 seconds
+                        if (secondsPassed % 30 == 0) {
                             randomEventManager.tryTriggerRandomEvent();
                         }
                     }
@@ -252,34 +244,40 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
         }, 0, 1000);
     }
 
-    private void healCritter() {
-        if (critter != null && critter.isAlive()) {
-            critter.updateHealth(20);
-            System.out.println(critter.getName() + " was healed!");
-            statsPanel.updateStats();
-        }
-    }
-
     private void feedCritter() {
         if (critter != null && critter.isAlive()) {
-            critter.setHunger(Math.min(100, critter.getHunger() + 25));
-            System.out.println(critter.getName() + " was fed!");
+            int base = 25;
+            int bonus = manager.getPlayerInfo().getHungerUpgradeLevel() * 5;
+            int amount = base + bonus;
+            critter.setHunger(Math.min(100, critter.getHunger() + amount));
             statsPanel.updateStats();
         }
     }
 
     private void giveWaterToCritter() {
         if (critter != null && critter.isAlive()) {
-            critter.setThirst(Math.min(100, critter.getThirst() + 25));
-            System.out.println(critter.getName() + " drank water!");
+            int base = 25;
+            int bonus = manager.getPlayerInfo().getThirstUpgradeLevel() * 5;
+            int amount = base + bonus;
+            critter.setThirst(Math.min(100, critter.getThirst() + amount));
+            statsPanel.updateStats();
+        }
+    }
+
+    private void healCritter() {
+        if (critter != null && critter.isAlive()) {
+            int base = 20;
+            int bonus = manager.getPlayerInfo().getHealingUpgradeLevel() * 5;
+            int amount = base + bonus;
+            critter.updateHealth(amount);
             statsPanel.updateStats();
         }
     }
 
     private void calculateRewards() {
         PlayerInfo info = manager.getPlayerInfo();
-        info.setCritterBucks((int) (info.getCritterBucks() + 10));
-        manager.setIndex(4); // Go back to pregame
+        info.setCritterBucks(info.getCritterBucks() + 10);
+        manager.setIndex(4); // Return to pregame
     }
 
     @Override
@@ -291,8 +289,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
         }
 
         if (critter != null && characterImage != null) {
-            int newWidth;
-            int newHeight;
+            int newWidth, newHeight;
 
             if (critter.getSpecies().equals("Whale")) {
                 newWidth = 600;
@@ -309,19 +306,13 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
         }
     }
 
-
-
     @Override
     public void clearPanel() {
         removeAll();
-        if (incomeTimer != null) {
-            incomeTimer.cancel();
-        }
-        if (randomEventTimer != null) {
-            randomEventTimer.cancel();
-        }
+        stopTimers();
         revalidate();
         repaint();
     }
 }
+
 

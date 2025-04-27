@@ -34,7 +34,6 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         Font uiFont = new Font("SansSerif", Font.BOLD, 16);
         Font largeFont = new Font("SansSerif", Font.BOLD, 24);
 
-        // --- Name Input Panel ---
         nameField = new JTextField(20);
         nameField.setFont(uiFont);
 
@@ -46,7 +45,6 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         namePanel.add(nameField);
         namePanel.setOpaque(false);
 
-        // --- Creature Card Carousel ---
         cardLayout = new CardLayout();
         cardHolderPanel = new JPanel(cardLayout);
         cardHolderPanel.setOpaque(false);
@@ -78,7 +76,6 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
             cardHolderPanel.add(wrapper, species);
         }
 
-        // --- Carousel Navigation ---
         JButton leftArrow = new JButton("←");
         leftArrow.setFont(largeFont);
         leftArrow.setPreferredSize(new Dimension(60, 60));
@@ -104,11 +101,13 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         cc.gridy = 0;
         cc.fill = GridBagConstraints.NONE;
         cc.anchor = GridBagConstraints.CENTER;
-        cc.gridx = 0; centerCarouselPanel.add(leftArrow, cc);
-        cc.gridx = 1; centerCarouselPanel.add(cardHolderPanel, cc);
-        cc.gridx = 2; centerCarouselPanel.add(rightArrow, cc);
+        cc.gridx = 0;
+        centerCarouselPanel.add(leftArrow, cc);
+        cc.gridx = 1;
+        centerCarouselPanel.add(cardHolderPanel, cc);
+        cc.gridx = 2;
+        centerCarouselPanel.add(rightArrow, cc);
 
-        // --- Critter Info (Stars + Description) ---
         starPanel = new JPanel();
         starPanel.setOpaque(false);
         starPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
@@ -122,18 +121,16 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         infoPanel.setOpaque(false);
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.add(Box.createVerticalStrut(10));
-        infoPanel.add(starPanel); // << ADDED HERE
+        infoPanel.add(starPanel);
         infoPanel.add(Box.createVerticalStrut(5));
         infoPanel.add(descriptionLabel);
 
-        // --- Combine Carousel + Info ---
         JPanel carouselAndInfoPanel = new JPanel();
         carouselAndInfoPanel.setLayout(new BoxLayout(carouselAndInfoPanel, BoxLayout.Y_AXIS));
         carouselAndInfoPanel.setOpaque(false);
         carouselAndInfoPanel.add(centerCarouselPanel);
         carouselAndInfoPanel.add(infoPanel);
 
-        // --- Center Wrapper ---
         JPanel verticalCenterWrapper = new JPanel();
         verticalCenterWrapper.setLayout(new BoxLayout(verticalCenterWrapper, BoxLayout.Y_AXIS));
         verticalCenterWrapper.setOpaque(false);
@@ -144,7 +141,6 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
 
         add(verticalCenterWrapper, BorderLayout.CENTER);
 
-        // --- Bottom Panel: Back | Play | Shop ---
         JButton backButton = new JButton("⮌");
         backButton.setFont(uiFont);
         backButton.setPreferredSize(new Dimension(80, 40));
@@ -177,7 +173,10 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         JButton shopButton = new JButton("Shop - " + manager.getPlayerInfo().getCritterBucks() + "$");
         shopButton.setFont(uiFont);
         shopButton.setPreferredSize(new Dimension(160, 40));
-        shopButton.addActionListener(e -> manager.setIndex(7));
+        shopButton.addActionListener(e -> {
+            ((ShopScreen) manager.getScreen(7)).setReturnScreen(4);
+            manager.setIndex(7);
+        });
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 10));
         bottomPanel.setPreferredSize(new Dimension(900, 70));
@@ -187,7 +186,6 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         bottomPanel.add(shopButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // --- Finish Up ---
         updateCritterInfoDisplay();
         revalidate();
         repaint();
@@ -203,12 +201,10 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
 
     private void updateStarDisplay(int rating) {
         starPanel.removeAll();
-
         try {
             ImageIcon filledIcon = new ImageIcon("images/icons/StarFilled.png");
             ImageIcon emptyIcon = new ImageIcon("images/icons/StarEmpty.png");
 
-            // Resize the images to 24x24 pixels
             Image filledImage = filledIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
             Image emptyImage = emptyIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
 
@@ -223,11 +219,9 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
             System.err.println("Could not load or resize star images.");
             e.printStackTrace();
         }
-
         starPanel.revalidate();
         starPanel.repaint();
     }
-
 
     private CritterTemplate getSelectedCritterTemplate() {
         if (speciesOptions != null && currentIndex >= 0 && currentIndex < speciesOptions.length) {
@@ -259,6 +253,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
         repaint();
     }
 }
+
 
 
 
