@@ -174,6 +174,7 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
 
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton backButton = new JButton("Back");
+        backButton.setBackground(manager.getBackButtonColor());
         backButton.addActionListener(e -> calculateRewards());
         leftPanel.add(backButton);
 

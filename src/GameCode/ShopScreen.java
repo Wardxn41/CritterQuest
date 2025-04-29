@@ -36,12 +36,13 @@ public class ShopScreen extends WindowPanel implements ScreenInterface {
 
         for (int col = 0; col < 3; col++) {
             for (int row = 0; row < 4; row++) {
-                JButton upgradeButton = new JButton("Level " + (row + 1)); // <<<<<<<<<< LEVEL X LABEL
-                upgradeButton.setPreferredSize(new Dimension(140, 40));
 
                 int upgradeCost = 20 + (row * 10);
                 int finalCol = col;
                 int finalRow = row;
+
+                JButton upgradeButton = new JButton("Level " + (row + 1) + " - $"+upgradeCost); // <<<<<<<<<< LEVEL X LABEL
+                upgradeButton.setPreferredSize(new Dimension(140, 40));
 
                 boolean purchased = finalRow < getCurrentLevel(upgradeTypes[finalCol]);
                 upgradeButton.setEnabled(!purchased);
@@ -67,6 +68,7 @@ public class ShopScreen extends WindowPanel implements ScreenInterface {
 
         // Back Button
         JButton backButton = new JButton("Back");
+        backButton.setBackground(manager.getBackButtonColor());
         backButton.setFont(new Font("Verdana", Font.BOLD, 18));
         backButton.addActionListener(e -> manager.setIndex(returnScreen));
 

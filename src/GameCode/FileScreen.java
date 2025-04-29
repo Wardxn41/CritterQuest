@@ -38,6 +38,7 @@ public class FileScreen extends WindowPanel implements ScreenInterface {
         // Button 1 - Back
         button1 = new JButton("← Back");
         styleButton(button1, bigFont, new Color(220, 20, 60), Color.WHITE, Color.DARK_GRAY);
+        button1.setBackground(manager.getBackButtonColor());
         button1.addActionListener(e -> manager.setIndex(0));
 
         // Button 2 - Save Slot 1

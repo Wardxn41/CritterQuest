@@ -25,7 +25,7 @@ public class PlayerInfo {
     }
 
     public int getSaveFile() { return saveFile; }
-    public void setSaveFile(int saveFile) { this.saveFile = saveFile; }
+    public void setSaveFile(int saveFile) { this.saveFile = saveFile;}
 
     public CritterInfo getCritter() { return critter; }
     public void setCritter(CritterInfo critter) { this.critter = critter; }

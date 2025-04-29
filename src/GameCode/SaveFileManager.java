@@ -26,6 +26,7 @@ public class SaveFileManager {
     }
 
     public void saveToFile(PlayerInfo player, int saveSlot) {
+
         File saveFile = saves[saveSlot];
 
         // Backup before saving
@@ -43,6 +44,8 @@ public class SaveFileManager {
     public void loadSave(PlayerInfo player, int saveSlot) {
         File saveFile = saves[saveSlot];
 
+
+
         try (BufferedReader reader = new BufferedReader(new FileReader(saveFile))) {
             StringBuilder sb = new StringBuilder();
             String line;
@@ -54,6 +57,7 @@ public class SaveFileManager {
             if (sb.length() == 0) {
                 // New file — don't overwrite player
                 System.out.println("[LOAD] Empty save slot. Using fresh PlayerInfo.");
+                player.setSaveFile(saveSlot); //to check and see if this fixes it
                 return;
             }
 
@@ -73,6 +77,7 @@ public class SaveFileManager {
             System.err.println("[LOAD ERROR] Could not load save.");
             e.printStackTrace();
         }
+
     }
 
     public String softQuery(int slot) {

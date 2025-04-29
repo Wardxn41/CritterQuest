@@ -143,6 +143,7 @@ public class PreGameScreen extends WindowPanel implements ScreenInterface {
 
         JButton backButton = new JButton("⮌");
         backButton.setFont(uiFont);
+        backButton.setBackground(manager.getBackButtonColor());
         backButton.setPreferredSize(new Dimension(80, 40));
         backButton.addActionListener(e -> manager.saveInSlot(1, manager.getSaveIndex()));
 

@@ -1,5 +1,7 @@
 package GameCode;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 public class WindowManager {
@@ -8,6 +10,7 @@ public class WindowManager {
     private List<ScreenInterface> Screens;
     private PlayerInfo playerInfo;
     private SaveFileManager saveFileManager;
+    private Color backButtonColor = Color.red;
 
     public WindowManager(List<ScreenInterface> Screens) {
         this.saveFileManager = new SaveFileManager();
@@ -30,9 +33,12 @@ public class WindowManager {
     }
 
     public void saveInSlot(int index, int saveIndex) {
+
+        playerInfo.setSaveFile(saveIndex);
         saveFileManager.saveToFile(playerInfo, saveIndex);
         this.screenIndex = index;
         ShowVisuals();
+
     }
 
     public void loadSaveSlot(int index, int saveIndex) {
@@ -58,5 +64,9 @@ public class WindowManager {
     public PlayerInfo getPlayerInfo() {
         return playerInfo;
     }
+
+    //setter and getter for back-button-color
+    public void setBackButtonColor(Color backButtonColor) {this.backButtonColor=backButtonColor;}
+    public Color getBackButtonColor() {return backButtonColor;}
 }
 

@@ -28,6 +28,7 @@ public class GameOverScreen extends WindowPanel implements ScreenInterface {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton mainMenuButton = new JButton("Return to Main Menu");
+        mainMenuButton.setBackground(manager.getBackButtonColor());
         mainMenuButton.setFont(new Font("Verdana", Font.BOLD, 20));
         mainMenuButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainMenuButton.addActionListener(e -> manager.setIndex(0)); // Assuming TitleScreen is index 0

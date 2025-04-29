@@ -61,6 +61,7 @@ public class TitleScreen extends WindowPanel implements ScreenInterface {
         button2.setBounds(300, 350, 200, 40);
         button3.setBounds(300, 400, 200, 40);
         button4.setBounds(300, 450, 200, 40);
+        button4.setBackground(manager.getBackButtonColor());
         button5.setBounds(300, 500, 200, 40); // New button
 
         // Button actions
@@ -75,7 +76,7 @@ public class TitleScreen extends WindowPanel implements ScreenInterface {
         add(button2);
         add(button3);
         add(button4);
-        add(button5);
+        //add(button5); supress adding this button
 
         revalidate();
         repaint();

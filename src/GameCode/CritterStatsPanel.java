@@ -21,6 +21,7 @@ public class CritterStatsPanel extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Critter Stats"));
+
         setOpaque(false);
 
         nameLabel = makeStyledLabel();
