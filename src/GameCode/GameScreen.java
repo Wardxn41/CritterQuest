@@ -309,11 +309,12 @@ public class GameScreen extends WindowPanel implements ScreenInterface {
 
     @Override
     public void clearPanel() {
-        removeAll();
         stopTimers();
+        removeAll();
         revalidate();
         repaint();
     }
+
 }
 
 

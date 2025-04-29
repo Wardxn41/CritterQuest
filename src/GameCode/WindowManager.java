@@ -28,6 +28,11 @@ public class WindowManager {
     }
 
     public void setIndex(int index) {
+        if (Screens.get(screenIndex) != null) {
+            Screens.get(screenIndex).clearPanel();
+        }
+
+        // Now actually switch
         this.screenIndex = index;
         ShowVisuals();
     }

@@ -86,6 +86,7 @@ public class RandomEventManager {
     }
 
     public void tryTriggerRandomEvent() {
+        System.out.println("Random event attempted");
         int chance = random.nextInt(100);
         if (chance < 20) { // 20% chance every check
             RandomEvent event = events.get(random.nextInt(events.size()));
